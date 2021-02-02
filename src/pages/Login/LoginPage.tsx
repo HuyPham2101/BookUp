@@ -11,19 +11,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-const  Copyright = () => {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { Copyright } from '../../components/CopyrightComponent';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,6 +40,7 @@ export const LoginPage = () => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+        <h1>Book-up</h1>
         <Avatar className={classes.avatar}>
         </Avatar>
         <Typography component="h1" variant="h5">
