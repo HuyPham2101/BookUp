@@ -11,6 +11,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "ant-design-pro": "^2.3.2",
     "antd": "^4.11.2",
     "craco-less": "^1.17.1",
     "react": "^17.0.1",
@@ -19,6 +20,7 @@
     "typescript": "^4.0.3",
     "web-vitals": "^0.2.4"
   },
+  "proxy":"http://backend:4000",
   "scripts": {
     "start": "craco start",
     "build": "craco build",
