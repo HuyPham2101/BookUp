@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright } from '../../components/CopyrightComponent';
+import saveToken from '../../util/Authentication';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,7 +35,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const LoginPage = () => {
+
   const classes = useStyles();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onLogin = async (e: any) => {
+    console.log(e);
+    e.preventDefault();
+  
+    try {
+      const loginRequest = await fetch('/api/user/token', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const loginJson = await loginRequest.json();
+      const { data } = loginJson;
+  
+      saveToken(data);
+
+      window.history.pushState('page2', 'Title', '/');
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -46,7 +78,10 @@ export const LoginPage = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form
+          className={classes.form}
+          onSubmit={onLogin}
+          >
           <TextField
             variant="outlined"
             margin="normal"
@@ -56,7 +91,9 @@ export const LoginPage = () => {
             label="Email Address"
             name="email"
             autoComplete="email"
+            type="email"
             autoFocus
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -68,6 +105,7 @@ export const LoginPage = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
