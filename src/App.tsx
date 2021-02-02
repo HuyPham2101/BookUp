@@ -2,6 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { Layout, Menu, Breadcrumb} from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import './App.less';
+import { LoginPage } from './pages/Login/LoginPage';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -72,6 +73,7 @@ const App: FC = () => {
       </Layout>
     </Layout>
   </Layout>,
+  <LoginPage/>
   </div>
 );
         }
