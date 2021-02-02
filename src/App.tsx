@@ -3,6 +3,7 @@ import { Layout, Menu, Breadcrumb} from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import './App.less';
 import { LoginPage } from './pages/Login/LoginPage';
+import { SignUp } from './pages/Register/RegisterPage';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -73,7 +74,8 @@ const App: FC = () => {
       </Layout>
     </Layout>
   </Layout>,
-  <LoginPage/>
+  <LoginPage/>,
+  <SignUp/>
   </div>
 );
         }
