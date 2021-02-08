@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import saveToken from '../../util/Authentication';
 
 const Copyright = () => {
   return (
@@ -48,6 +49,41 @@ const useStyles = makeStyles((theme) => ({
 export const SignUp = () => {
   const classes = useStyles();
 
+  const [email, setEmail ] = useState('');
+  const [password, setPassword ] = useState('');
+  const [userName, setUserName ] = useState('');
+  const onSignUp = async (e: any) => {
+    console.log(e);
+    e.preventDefault();
+  
+    try {
+      const signUpRequest = await fetch('/api/user/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          userName,
+          email,
+          password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if(signUpRequest.status === 200) {
+        const {data} = await signUpRequest.json();
+      } else {
+        throw new Error ("Register Failed")
+      }
+
+  
+      // saveToken(data);
+
+      // window.history.pushState('page2', 'Title', '/');
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -58,29 +94,18 @@ export const SignUp = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={onSignUp} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                id="userName"
+                label="User Name"
+                name="userName"
+                autoComplete="Username"
+                onChange = {(e) => setUserName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -92,6 +117,7 @@ export const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange = {(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -104,6 +130,7 @@ export const SignUp = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange = {(e) => setPassword(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -124,7 +151,7 @@ export const SignUp = () => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
