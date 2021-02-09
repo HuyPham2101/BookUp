@@ -24,7 +24,7 @@
     "web-vitals": "^0.2.4"
   },
   "proxy": "http://127.0.0.1:4000",
-  "scripts": {
+    "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",

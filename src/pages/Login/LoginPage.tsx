@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext, ChangeEvent } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +13,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright } from '../../components/CopyrightComponent';
 import saveToken from '../../util/Authentication';
+import {
+  authContext,
+  LoginOptions,
+} from "../../contexts/AuthenticationContext";
+import { Redirect, useHistory } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,36 +41,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const LoginPage = () => {
-
+  const history = useHistory();
+  const auth = useContext(authContext)
   const classes = useStyles();
+  const [formError, setFormError] = useState<string | null>(null);
+  const [values, setValues] = useState<LoginOptions>({
+    email: '',
+    password: '',
+  });
+  const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const onLogin = async (e: any) => {
+  const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log(e);
     e.preventDefault();
-  
+    setFormError(null)
     try {
-      const loginRequest = await fetch('/api/user/token', {
-        method: 'POST',
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const loginJson = await loginRequest.json();
-      const { data } = loginJson;
-  
-      saveToken(data);
-
-      window.history.pushState('page2', 'Title', '/');
+      await auth.actions.login(values);
       
+      // window.history.pushState('page2', 'Title', '/');
     } catch (error) {
-      console.error(error);
+      setFormError(error.message);
     }
   };
 
@@ -93,7 +91,7 @@ export const LoginPage = () => {
             autoComplete="email"
             type="email"
             autoFocus
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={fieldDidChange}
           />
           <TextField
             variant="outlined"
@@ -105,7 +103,7 @@ export const LoginPage = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={fieldDidChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -133,6 +131,7 @@ export const LoginPage = () => {
             </Grid>
           </Grid>
         </form>
+        <p style= {{color: 'red', textAlign:"center"}}>{formError}</p>
       </div> 
       <Box mt={8}>
         <Copyright />

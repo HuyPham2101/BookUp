@@ -2,11 +2,16 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import { Footer } from 'antd/lib/layout/layout';
 import { Copyright } from '../../components/CopyrightComponent';
+import { useContext } from 'react';
+import { authContext } from '../../contexts/AuthenticationContext';
+// import { useContext } from 'react';
+// import { authContext } from '../../contexts/AuthenticationContext';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
 export const DashboardPage = () => {
+  const {actions:{logout}} = useContext(authContext)
     return (
         <Layout>
         <Header className="header">
@@ -15,6 +20,7 @@ export const DashboardPage = () => {
             <Menu.Item key="1">nav 1</Menu.Item>
             <Menu.Item key="2">nav 2</Menu.Item>
             <Menu.Item key="3">nav 3</Menu.Item>
+            <Menu.Item key="4" style = {{float: "right"}} onClick = {() => logout()}>Log Out</Menu.Item>
           </Menu>
         </Header>
         <Layout>
