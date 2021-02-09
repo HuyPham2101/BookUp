@@ -1,12 +1,19 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import './App.less';
 import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthenticationContext';
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
+import { authContext, AuthProvider } from './contexts/AuthenticationContext';
 
-
+export const BasePage = () => {
+  const {token} = useContext(authContext)
+  if(token){
+    return <Redirect to= "/dashboard" /> ;
+  } else {
+    return <Redirect to = "/login" />
+  }
+}
 const App: FC = () => {
   useEffect(() => {
     (async function () {
@@ -28,9 +35,10 @@ const App: FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <Route exact path="/" component={DashboardPage} />
+        <Route exact path="/dashboard" component={DashboardPage} />
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/register" component={SignUp} />
+        <Route path = "/" component = {BasePage} />
       </Router>
     </AuthProvider>
   );

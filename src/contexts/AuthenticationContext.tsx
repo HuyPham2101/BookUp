@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import saveToken from "../util/Authentication";
 export type LoginOptions = {
   email: string;
   password: string;
@@ -28,7 +29,7 @@ export const initialAuthContext = {
 export const authContext = React.createContext<AuthContext>(initialAuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(window.localStorage.getItem("access-token"));
 
   const login = async (values: LoginOptions) => {
     const loginRequest = await fetch("/api/user/token", {
@@ -40,8 +41,8 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
     if(loginRequest.status === 200) {
         const { data } = await loginRequest.json();
-        console.log(data)
-        setToken(data);
+        console.log(data);
+        window.localStorage.setItem("access-token" ,data)
     } else {
         throw new Error (
             "either the user does not exist or the Password is wrong"
