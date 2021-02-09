@@ -2,11 +2,14 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import { Footer } from 'antd/lib/layout/layout';
 import { Copyright } from '../../components/CopyrightComponent';
+// import { useContext } from 'react';
+// import { authContext } from '../../contexts/AuthenticationContext';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
 export const DashboardPage = () => {
+
     return (
         <Layout>
         <Header className="header">

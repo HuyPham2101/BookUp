@@ -8,6 +8,14 @@ export type RegisterOptions = {
     email: string;
     password: string;
     name: string;
+};
+  
+export type JWTTokenData = {
+    id: number;
+    name: string;
+    email: string;
+    iat: string;
+    exp: string;
   };
   
 export type AuthContext = {
@@ -15,6 +23,8 @@ export type AuthContext = {
   actions: {
     login: (options: LoginOptions) => Promise<void>;
     register: (options: RegisterOptions) => Promise<void>;
+    getTokenData: () => JWTTokenData | null;
+    logout:() => void
   };
 };
 
@@ -23,6 +33,8 @@ export const initialAuthContext = {
   actions: {
     login: async () => {},
     register: async () => {},
+    getTokenData : () => null,
+    logout: () => {}
   },
 };
 
@@ -65,7 +77,15 @@ export const AuthProvider: React.FC = ({ children }) => {
       throw new Error("Maybe the email you used already existed");
     }
   };
-
+  const getTokenData = () => {
+      if(token) {
+          return JSON.parse(atob(token.split(".")[1]));
+      }
+      return null;
+  }
+  const logout = () => {
+      window.localStorage.removeItem("access-token");
+  }
   return (
     <authContext.Provider
       value={{
@@ -73,6 +93,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         actions: {
           login,
           register,
+          getTokenData,
+          logout
         },
       }}
     >

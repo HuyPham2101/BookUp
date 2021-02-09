@@ -7,12 +7,21 @@ import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 import { authContext, AuthProvider } from './contexts/AuthenticationContext';
 
 export const BasePage = () => {
-  const {token} = useContext(authContext)
-  if(token){
-    return <Redirect to= "/dashboard" /> ;
-  } else {
-    return <Redirect to = "/login" />
-  }
+  const {token , actions: {getTokenData, logout}} = useContext(authContext)
+  console.log(213124433)
+  if(token !== null){
+    const tokenData = getTokenData()
+    if(tokenData !== null) {
+      const {exp} = tokenData
+      console.log(parseInt(exp) *1000)
+      console.log(Date.now())
+      if(parseInt(exp) * 1000 > Date.now()){
+        return <Redirect to = "/dashboard"/>
+      }
+      logout();
+    } 
+  } return <Redirect to = "/" />
+  
 }
 const App: FC = () => {
   useEffect(() => {
