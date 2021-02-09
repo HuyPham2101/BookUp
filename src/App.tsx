@@ -3,26 +3,50 @@ import './App.less';
 import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
-import { authContext, AuthProvider } from './contexts/AuthenticationContext';
+import { BrowserRouter, BrowserRouter as Router, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
+import { authContext,AuthProvider } from './contexts/AuthenticationContext';
 
 export const BasePage = () => {
-  const {token , actions: {getTokenData, logout}} = useContext(authContext)
-  console.log(213124433)
-  if(token !== null){
-    const tokenData = getTokenData()
-    if(tokenData !== null) {
-      const {exp} = tokenData
-      console.log(parseInt(exp) *1000)
-      console.log(Date.now())
-      if(parseInt(exp) * 1000 > Date.now()){
-        return <Redirect to = "/dashboard"/>
+  const { token } = useContext(authContext);
+  if (token !== null) {
+    return <Redirect to="/dashboard" />;
+  } 
+  return <Redirect to="/login" />; 
+};
+
+const UnauthenticatedRoute: React.FC<RouteProps> = ({
+  children,
+  ...routeProps
+}) => {
+  const { token } = useContext(authContext);
+  if (token === null) {
+    return <Route {...routeProps} />;
+  }
+  return <Redirect to="/" />;
+};
+
+const AuthenticatedRoute: React.FC<RouteProps> = ({
+  children,
+  ...routeProps
+}) => {
+  const {
+    token,
+    actions: { getTokenData, logout },
+  } = useContext(authContext);
+  if (token !== null) {
+    const tokenData = getTokenData();
+    if (tokenData !== null) {
+      const { exp } = tokenData;
+      if (parseInt(exp) * 1000 > Date.now()) {
+        return <Route {...routeProps} />;
       }
-      logout();
-    } 
-  } return <Redirect to = "/" />
-  
-}
+      // logout();
+    }
+  }
+  return <Redirect to="/" />;
+};
+
+
 const App: FC = () => {
   useEffect(() => {
     (async function () {
@@ -32,24 +56,19 @@ const App: FC = () => {
     })();
   });
 
-  
-  // return (
-  //  <div className="App">
-  //    {/* <DashboardPage/> */}
-  //    {/* <CalendarPage /> */}
-  //    <LoginPage/>
-  // </div>
-  // );
 
   return (
+  <BrowserRouter>
     <AuthProvider>
-      <Router>
-        <Route exact path="/dashboard" component={DashboardPage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/register" component={SignUp} />
-        <Route path = "/" component = {BasePage} />
-      </Router>
+      <Switch>
+
+          <UnauthenticatedRoute exact path="/login" component={LoginPage} />
+          <UnauthenticatedRoute exact path="/register" component={SignUp} />
+          <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
+          <Route path="/" component={BasePage} />
+      </Switch>
     </AuthProvider>
+  </BrowserRouter>
   );
 }
 

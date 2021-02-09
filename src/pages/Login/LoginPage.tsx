@@ -53,7 +53,7 @@ export const LoginPage = () => {
 
   const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log(e);
-    e.preventDefault();
+    // e.preventDefault();
     setFormError(null)
     try {
       await auth.actions.login(values);
