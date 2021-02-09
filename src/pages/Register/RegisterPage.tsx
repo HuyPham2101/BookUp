@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useContext, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import saveToken from '../../util/Authentication';
+import { authContext, RegisterOptions } from '../../contexts/AuthenticationContext';
 
 const Copyright = () => {
   return (
@@ -49,38 +50,27 @@ const useStyles = makeStyles((theme) => ({
 export const SignUp = () => {
   const classes = useStyles();
 
-  const [email, setEmail ] = useState('');
-  const [password, setPassword ] = useState('');
-  const [userName, setUserName ] = useState('');
+  const auth = useContext(authContext);
+  const [values, setValues] = useState<RegisterOptions>({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [formError, setFormError] = useState<string | null>(null);
+  const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
   const onSignUp = async (e: any) => {
     console.log(e);
     e.preventDefault();
-  
+    setFormError(null)
     try {
-      const signUpRequest = await fetch('/api/user/register', {
-        method: 'POST',
-        body: JSON.stringify({
-          userName,
-          email,
-          password,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if(signUpRequest.status === 200) {
-        const {data} = await signUpRequest.json();
-      } else {
-        throw new Error ("Register Failed")
-      }
-
-  
+      await auth.actions.register(values);
       // saveToken(data);
-
       // window.history.pushState('page2', 'Title', '/');
-      
     } catch (error) {
-      console.error(error);
+      setFormError(error.message);
     }
   };
 
@@ -105,7 +95,7 @@ export const SignUp = () => {
                 label="User Name"
                 name="userName"
                 autoComplete="Username"
-                onChange = {(e) => setUserName(e.target.value)}
+                onChange = {fieldDidChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -117,7 +107,7 @@ export const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange = {(e) => setEmail(e.target.value)}
+                onChange = {fieldDidChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -130,7 +120,7 @@ export const SignUp = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange = {(e) => setPassword(e.target.value)}
+                onChange = {fieldDidChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -158,6 +148,7 @@ export const SignUp = () => {
           </Grid>
         </form>
       </div>
+      <p style= {{color: 'red', textAlign:"center"}}>{formError}</p>
       <Box mt={5}>
         <Copyright />
       </Box>

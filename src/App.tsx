@@ -4,6 +4,7 @@ import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthenticationContext';
 
 
 const App: FC = () => {
@@ -25,11 +26,13 @@ const App: FC = () => {
   // );
 
   return (
-  <Router>
-    <Route exact path="/" component={DashboardPage} />
-    <Route exact path="/login" component={LoginPage} />
-    <Route exact path="/register" component={SignUp} />
-  </Router>
+    <AuthProvider>
+      <Router>
+        <Route exact path="/" component={DashboardPage} />
+        <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/register" component={SignUp} />
+      </Router>
+    </AuthProvider>
   );
 }
 
