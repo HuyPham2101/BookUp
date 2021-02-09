@@ -3,15 +3,16 @@ import './App.less';
 import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import { BrowserRouter, BrowserRouter as Router, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { authContext,AuthProvider } from './contexts/AuthenticationContext';
 
 export const BasePage = () => {
   const { token } = useContext(authContext);
-  if (token !== null) {
+  if (token) {
     return <Redirect to="/dashboard" />;
-  } 
-  return <Redirect to="/login" />; 
+  } else{
+    return <Redirect to="/login" />; 
+  }
 };
 
 const UnauthenticatedRoute: React.FC<RouteProps> = ({
@@ -40,14 +41,13 @@ const AuthenticatedRoute: React.FC<RouteProps> = ({
       if (parseInt(exp) * 1000 > Date.now()) {
         return <Route {...routeProps} />;
       }
-      // logout();
+      logout();
     }
   }
   return <Redirect to="/" />;
 };
 
-
-const App: FC = () => {
+ const App: FC = () => {
   useEffect(() => {
     (async function () {
       const helloRequest = await fetch("/api");
@@ -61,7 +61,6 @@ const App: FC = () => {
   <BrowserRouter>
     <AuthProvider>
       <Switch>
-
           <UnauthenticatedRoute exact path="/login" component={LoginPage} />
           <UnauthenticatedRoute exact path="/register" component={SignUp} />
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />

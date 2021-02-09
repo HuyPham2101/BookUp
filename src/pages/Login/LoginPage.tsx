@@ -17,6 +17,7 @@ import {
   authContext,
   LoginOptions,
 } from "../../contexts/AuthenticationContext";
+import { Redirect, useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const LoginPage = () => {
+  const history = useHistory();
   const auth = useContext(authContext)
   const classes = useStyles();
   const [formError, setFormError] = useState<string | null>(null);
@@ -53,10 +55,12 @@ export const LoginPage = () => {
 
   const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log(e);
-    // e.preventDefault();
+    e.preventDefault();
     setFormError(null)
     try {
       await auth.actions.login(values);
+      
+      // window.history.pushState('page2', 'Title', '/');
     } catch (error) {
       setFormError(error.message);
     }
@@ -126,8 +130,8 @@ export const LoginPage = () => {
               </Link>
             </Grid>
           </Grid>
-          <p style= {{color: 'red', textAlign:"center"}}>{formError}</p>
         </form>
+        <p style= {{color: 'red', textAlign:"center"}}>{formError}</p>
       </div> 
       <Box mt={8}>
         <Copyright />

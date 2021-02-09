@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect, useHistory } from "react-router-dom";
 import saveToken from "../util/Authentication";
 export type LoginOptions = {
   email: string;
@@ -42,7 +43,7 @@ export const authContext = React.createContext<AuthContext>(initialAuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [token, setToken] = useState<string | null>(window.localStorage.getItem("access-token"));
-
+  
   const login = async (values: LoginOptions) => {
     const loginRequest = await fetch("/api/user/token", {
       method: "POST",
@@ -51,10 +52,14 @@ export const AuthProvider: React.FC = ({ children }) => {
         "Content-Type": "application/json",
       },
     });
+    console.log(loginRequest.status)
     if(loginRequest.status === 200) {
         const { data } = await loginRequest.json();
         console.log(data);
-        window.localStorage.setItem("access-token" ,data)
+        window.localStorage.setItem("access-token" ,data)   
+        window.history.pushState('page2', 'Title', '/');
+        // reload the page to get to the basepage url 
+        window.location.reload();
     } else {
         throw new Error (
             "either the user does not exist or the Password is wrong"
@@ -72,7 +77,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     if (registerRequest.status === 200) {
       const { data } = await registerRequest.json();
-      setToken(data);
+      login({email:values.email ,password: values.password})
     } else {
       throw new Error("Maybe the email you used already existed");
     }
@@ -84,6 +89,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       return null;
   }
   const logout = () => {
+      setToken(null)
       window.localStorage.removeItem("access-token");
   }
   return (
@@ -94,7 +100,7 @@ export const AuthProvider: React.FC = ({ children }) => {
           login,
           register,
           getTokenData,
-          logout
+          logout,
         },
       }}
     >
