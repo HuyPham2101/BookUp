@@ -5,6 +5,8 @@ import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { authContext,AuthProvider } from './contexts/AuthenticationContext';
+import { CalendarPage } from './pages/Booking/CalendarPage';
+import { AvailabilityPage } from './pages/Availability/AvailabilityPage';
 
 export const BasePage = () => {
   const { token } = useContext(authContext);
@@ -63,7 +65,9 @@ const AuthenticatedRoute: React.FC<RouteProps> = ({
       <Switch>
           <UnauthenticatedRoute exact path="/login" component={LoginPage} />
           <UnauthenticatedRoute exact path="/register" component={SignUp} />
+          <UnauthenticatedRoute exact path= "/booking" component = {CalendarPage}/>
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
+          <AuthenticatedRoute exact path = "/Availability" component = {AvailabilityPage} />
           <Route path="/" component={BasePage} />
       </Switch>
     </AuthProvider>
