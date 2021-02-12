@@ -11,7 +11,6 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import saveToken from '../../util/Authentication';
 import { authContext, RegisterOptions } from '../../contexts/AuthenticationContext';
 
 const Copyright = () => {
@@ -95,7 +94,7 @@ export const SignUp = () => {
                 label="User Name"
                 name="userName"
                 autoComplete="Username"
-                onChange = {fieldDidChange}
+                onChange={fieldDidChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -107,7 +106,7 @@ export const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange = {fieldDidChange}
+                onChange={fieldDidChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -120,7 +119,7 @@ export const SignUp = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange = {fieldDidChange}
+                onChange={fieldDidChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -148,7 +147,7 @@ export const SignUp = () => {
           </Grid>
         </form>
       </div>
-      <p style= {{color: 'red', textAlign:"center"}}>{formError}</p>
+      <p style={{ color: 'red', textAlign: "center" }}>{formError}</p>
       <Box mt={5}>
         <Copyright />
       </Box>

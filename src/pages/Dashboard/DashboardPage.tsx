@@ -1,10 +1,9 @@
-import { Layout, Menu, Breadcrumb, Button, Card } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
+import { Layout, Menu, Breadcrumb, Button } from 'antd';
 import { Footer } from 'antd/lib/layout/layout';
 import { Copyright } from '../../components/CopyrightComponent';
 import { useContext, useEffect, useState } from 'react';
 import { authContext } from '../../contexts/AuthenticationContext';
-import { Modal, ModalMask } from './components/Modal'
+import { Modal } from './components/Modal'
 import { AddOfferForm } from "./components/AddOfferForm"
 import { Offer } from "../../components/EntityTypes"
 import { OfferItem } from "./components/OfferItem"
@@ -32,7 +31,7 @@ export const DashboardPage = () => {
   };
   useEffect(() => {
     fetchOffers();
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
 
   return (

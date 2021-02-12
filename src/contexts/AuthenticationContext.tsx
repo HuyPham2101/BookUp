@@ -1,41 +1,40 @@
 import React, { useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
-import saveToken from "../util/Authentication";
+
 export type LoginOptions = {
   email: string;
   password: string;
 };
 export type RegisterOptions = {
-    email: string;
-    password: string;
-    name: string;
+  email: string;
+  password: string;
+  name: string;
 };
-  
+
 export type JWTTokenData = {
-    id: number;
-    name: string;
-    email: string;
-    iat: string;
-    exp: string;
-  };
-  
+  id: number;
+  name: string;
+  email: string;
+  iat: string;
+  exp: string;
+};
+
 export type AuthContext = {
   token: string | null;
   actions: {
     login: (options: LoginOptions) => Promise<void>;
     register: (options: RegisterOptions) => Promise<void>;
     getTokenData: () => JWTTokenData | null;
-    logout:() => void
+    logout: () => void
   };
 };
 
 export const initialAuthContext = {
   token: null,
   actions: {
-    login: async () => {},
-    register: async () => {},
-    getTokenData : () => null,
-    logout: () => {}
+    login: async () => { },
+    register: async () => { },
+    getTokenData: () => null,
+    logout: () => { }
   },
 };
 
@@ -43,7 +42,7 @@ export const authContext = React.createContext<AuthContext>(initialAuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [token, setToken] = useState<string | null>(window.localStorage.getItem("access-token"));
-  
+
   const login = async (values: LoginOptions) => {
     const loginRequest = await fetch("/api/user/token", {
       method: "POST",
@@ -53,17 +52,17 @@ export const AuthProvider: React.FC = ({ children }) => {
       },
     });
     console.log(loginRequest.status)
-    if(loginRequest.status === 200) {
-        const { data } = await loginRequest.json();
-        console.log(data);
-        window.localStorage.setItem("access-token" ,data)   
-        window.history.pushState('page2', 'Title', '/');
-        // reload the page to get to the basepage url 
-        window.location.reload();
+    if (loginRequest.status === 200) {
+      const { data } = await loginRequest.json();
+      console.log(data);
+      window.localStorage.setItem("access-token", data)
+      window.history.pushState('page2', 'Title', '/');
+      // reload the page to get to the basepage url 
+      window.location.reload();
     } else {
-        throw new Error (
-            "either the user does not exist or the Password is wrong"
-        );
+      throw new Error(
+        "either the user does not exist or the Password is wrong"
+      );
     }
   };
   const register = async (values: RegisterOptions) => {
@@ -76,21 +75,20 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
 
     if (registerRequest.status === 200) {
-      const { data } = await registerRequest.json();
-      login({email:values.email ,password: values.password})
+      login({ email: values.email, password: values.password })
     } else {
       throw new Error("Maybe the email you used already existed");
     }
   };
   const getTokenData = () => {
-      if(token) {
-          return JSON.parse(atob(token.split(".")[1]));
-      }
-      return null;
+    if (token) {
+      return JSON.parse(atob(token.split(".")[1]));
+    }
+    return null;
   }
   const logout = () => {
-      setToken(null)
-      window.localStorage.removeItem("access-token");
+    setToken(null)
+    window.localStorage.removeItem("access-token");
   }
   return (
     <authContext.Provider
