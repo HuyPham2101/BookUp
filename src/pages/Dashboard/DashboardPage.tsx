@@ -6,6 +6,8 @@ import { useContext, useEffect, useState } from 'react';
 import { authContext } from '../../contexts/AuthenticationContext';
 import { Modal, ModalMask } from './components/Modal'
 import { AddOfferForm } from "./components/AddOfferForm"
+import { Offer } from "../../components/EntityTypes"
+import { OfferItem } from "./components/OfferItem"
 // import { useContext } from 'react';
 // import { authContext } from '../../contexts/AuthenticationContext';
 
@@ -13,7 +15,7 @@ const { Header, Content } = Layout;
 
 export const DashboardPage = () => {
   const { actions: { logout } } = useContext(authContext)
-  const [offers, setOffers] = useState<any[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
   const token = useContext(authContext);
   const [addOfferVisible, setAddOfferVisible] = useState(false);
 
@@ -24,7 +26,8 @@ export const DashboardPage = () => {
     });
     if (offerRequest.status === 200) {
       const offerJSON = await offerRequest.json();
-      setOffers(offerJSON);
+      setOffers(offerJSON.data);
+      console.log(offers);
     }
   };
   useEffect(() => {
@@ -48,22 +51,29 @@ export const DashboardPage = () => {
           <Breadcrumb.Item>Home</Breadcrumb.Item>
           <Breadcrumb.Item>List</Breadcrumb.Item>
           <Breadcrumb.Item>App</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Button type='primary' style={{ float: "right" }} onClick={() => {
+              setAddOfferVisible(true)
+            }}>Add Offer</Button>
+          </Breadcrumb.Item>
         </Breadcrumb>
         <Content
           className="site-layout-background"
           style={{
             padding: 24,
-            margin: 0,
+            marginLeft: '12%',
+            marginRight: '12%',
             minHeight: 280,
           }}
         >
-          <Button type='primary' style={{ float: "right" }} onClick={() => {
-            setAddOfferVisible(true)
-          }}>Add Offer</Button>
-          {offers.map(offer => (
-            <div>askdj</div>
-          ))}
-          <Card title="Card title" style={{ width: "500px" }}>Card content</Card>
+
+          <div>
+            {offers.map(offer => (
+              <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
+                fetchOffers();
+              }} />
+            ))}
+          </div>
           {addOfferVisible && (
             <Modal onCancel={() => { setAddOfferVisible(false) }}>
               <AddOfferForm afterSubmit={() => {

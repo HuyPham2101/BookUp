@@ -8,7 +8,7 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
     const [offer, setOffer] = useState({
         title: "",
         description: "",
-        minutes: 0,
+        duration: 15,
         link: ""
     })
 
@@ -17,16 +17,17 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
     }
 
     const setMinutes = (minute: any) => {
-        setOffer({ ...offer, minutes: minute })
+        setOffer({ ...offer, duration: minute })
     }
 
     const onFinish = async (e: React.FormEvent<HTMLFormElement>) => {
         const userId = token.actions.getTokenData()?.id
+
         const tempOffer = {
             title: offer.title,
             description: offer.description,
-            duration: offer.minutes,
-            link: `http://localhost:3000/api/booking/`,
+            duration: offer.duration,
+            link: `http://localhost:3000/api/user/${userId}/booking/offer/${getTitleWithoutSpace(offer.title)}/${offer.duration}`,
         }
         console.log(tempOffer);
         await fetch(`/api/user/${userId}/eventType`, {
@@ -36,6 +37,10 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
         })
 
         afterSubmit();
+    }
+
+    const getTitleWithoutSpace = (title: string) => {
+        return title.split(' ').join('_');
     }
 
     return (
