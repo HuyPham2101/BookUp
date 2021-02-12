@@ -17,6 +17,7 @@
     "ant-design-pro": "^2.3.2",
     "antd": "^4.11.2",
     "craco-less": "^1.17.1",
+    "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
