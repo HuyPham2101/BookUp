@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TimePicker,Checkbox } from 'antd';
 import moment from 'moment';
 
@@ -51,38 +51,48 @@ export const DayRow: React.FC<DayItemProps> = ({
     day, fetchDays = () => {}, userid
 }) => {
     
-const [values, setValues] = useState({ startTimeHour: 0, startTimeMinute: 0, endTimeHour: 0, endTimeMinute: 0, day: "" });
+// const [values, setValues] = useState({ startTimeHour: 0, startTimeMinute: 0, endTimeHour: 0, endTimeMinute: 0, day: "" });
+
+// useEffect(() => {
+// }, []);
 
 const timechanges = async (time:any,timestring:any) => {
-    let startTimeHour = Number(timestring[0].substring(0,2))
-    let startTimeMinute = Number(timestring[0].substring(3,5))
+    let startTimeHour1 = Number(timestring[0].substring(0,2))
+    let startTimeMinute1 = Number(timestring[0].substring(3,5))
 
-    let endTimeHour = Number(timestring[1].substring(0,2))
-    let endTimeMinute = Number(timestring[1].substring(3,5))
+    let endTimeHour1 = Number(timestring[1].substring(0,2))
+    let endTimeMinute1 = Number(timestring[1].substring(3,5))
 
-    console.log("starttimehour:" + startTimeHour)
-    console.log("Starttimeminute:" + startTimeMinute)
-
-    console.log("starttimehour:" + endTimeHour)
-    console.log("Starttimeminute:" + endTimeMinute)
+    console.log("starttimehour:" + startTimeHour1)
+    console.log("Starttimeminute:" + startTimeMinute1)
+    console.log(Number(timestring[0].substring(0,2)))
+    console.log(Number(timestring[0].substring(3,5)))
+    console.log("starttimehour:" + endTimeHour1)
+    console.log("Starttimeminute:" + endTimeMinute1)
     // console.log(day.day)
     console.log(userid)
+    // setValues({ ...values, startTimeHour: startTimeHour, startTimeMinute:startTimeMinute, endTimeHour:endTimeHour, endTimeMinute:endTimeMinute, day: day.day });
 
-    setValues({ ...values, startTimeHour: startTimeHour, startTimeMinute:startTimeMinute, endTimeHour:endTimeHour, endTimeMinute:endTimeMinute, day: day.day });
     const updateTime = await fetch(`/api/availability/update/${userid}`, {
         headers: { 'content-type': 'application/json' },
         method: "PATCH", 
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+            fromTimeHour: startTimeHour1,
+            fromTimeMinute : startTimeMinute1,
+            endTimeHour:endTimeHour1,
+            endTimeMinute:endTimeMinute1,
+            day: day.day
+        }),
     });
-    console.log(JSON.stringify(values));
+    console.log(123)
     const updatedTime = await updateTime.json()
-    // console.log(updatedTime)
+    console.log(updatedTime)
 } 
 
 
     const [checkedBox, setCheckedBox] = useState(true);
-    let temp = moment().hours(day.fromTimeHour).minutes(day.fromTimeMinute).second(0);
-    let tempend = moment().hours(day.endTimeHour).minutes(day.endTimeMinute).second(0);
+    let startTimeValue = moment().hours(day.fromTimeHour).minutes(day.fromTimeMinute).second(0);
+    let endTimeValue = moment().hours(day.endTimeHour).minutes(day.endTimeMinute).second(0);
     return (
     <div>
         <form action="" style = {{display:'flex' , justifyContent: 'space-evenly', position : 'relative'}}>
@@ -91,7 +101,7 @@ const timechanges = async (time:any,timestring:any) => {
             {day.day}
             </div>
             {checkedBox && 
-            <RangePicker allowClear = {false} defaultValue={[temp,tempend]} format = "HH:mm" showSecond = {false}  showNow= {false} style = {{marginLeft:'50px'}} onChange = {timechanges} />            
+            <RangePicker allowClear = {false} defaultValue={[startTimeValue,endTimeValue]} format = "HH:mm" showSecond = {false}  showNow= {false} style = {{marginLeft:'50px'}} onChange = {timechanges} />            
             }
             {!checkedBox && (
                 <p>Unavailable!</p>
