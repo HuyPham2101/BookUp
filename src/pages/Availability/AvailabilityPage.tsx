@@ -9,10 +9,11 @@ const { RangePicker } = TimePicker;
 export const AvailabilityPage = () => {
     const {token} = useContext(authContext);
     const [daysAvailability, setDaysAvailability] = useState<DayAvailability[]>([]);
-
+    const [userid, setUserId] = useState()
 
     const fetchAvailability = async function () {
         let decoded : any = jwt_decode(token || "");
+        setUserId(decoded.id)
         const availabilityRequest = await fetch("/api/availability/" + decoded.id, {
             method: "GET",
             headers: {"Content-Type": "application/json"},
@@ -47,7 +48,7 @@ export const AvailabilityPage = () => {
             })} */}
 
             {daysAvailability.map((day)=> (
-                <List.Item key={day.id}> <DayRow day={day} fetchDays={() => {fetchAvailability()}}/></List.Item>
+                <List.Item key={day.id}> <DayRow day={day} fetchDays={() => {fetchAvailability()}} userid= {userid} /></List.Item>
             ))}
             {/* <List.Item> <DayRow {daysAvailability[1]} /> </List.Item> */}
             </List>
