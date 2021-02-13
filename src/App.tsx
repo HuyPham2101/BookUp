@@ -64,7 +64,8 @@ const AuthenticatedRoute: React.FC<RouteProps> = ({
           <UnauthenticatedRoute exact path="/login" component={LoginPage} />
           <UnauthenticatedRoute exact path="/register" component={SignUp} />
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
-          <Route path="/" component={BasePage} />
+          {/* <Route exact path = "user/:userid/booking/offer/:offername/:minute"/> */}
+           <Route path="/" component={BasePage} />
       </Switch>
     </AuthProvider>
   </BrowserRouter>
