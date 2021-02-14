@@ -47,7 +47,7 @@ cursor: pointer;
 height: 100%;
 width: 24px;
 border-radius: 50%;
-background-color: red;
+background-color: #dcdcdc;
 text-align:center;
 `;
 

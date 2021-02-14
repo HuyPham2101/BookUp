@@ -1,4 +1,4 @@
-import { Layout, Menu, Breadcrumb, Button } from 'antd';
+import { Layout, Menu, Breadcrumb, Button, Card } from 'antd';
 import { Footer } from 'antd/lib/layout/layout';
 import { Copyright } from '../../components/CopyrightComponent';
 import { useContext, useEffect, useState } from 'react';
@@ -7,6 +7,8 @@ import { Modal } from './components/Modal'
 import { AddOfferForm } from "./components/AddOfferForm"
 import { Offer } from "../../components/EntityTypes"
 import { OfferItem } from "./components/OfferItem"
+import { Link } from 'react-router-dom';
+import { PlusCircleTwoTone } from '@ant-design/icons';
 // import { useContext } from 'react';
 // import { authContext } from '../../contexts/AuthenticationContext';
 
@@ -26,7 +28,6 @@ export const DashboardPage = () => {
     if (offerRequest.status === 200) {
       const offerJSON = await offerRequest.json();
       setOffers(offerJSON.data);
-      console.log(offers);
     }
   };
   useEffect(() => {
@@ -38,9 +39,9 @@ export const DashboardPage = () => {
     <Layout style={{ height: '100%' }}>
       <Header className="header">
         <div className="logo" />
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+          <Menu.Item key="2"><Link to="/Availability">Availability</Link></Menu.Item>
           <Menu.Item key="3">nav 3</Menu.Item>
           <Menu.Item key="4" style={{ float: "right" }} onClick={() => logout()}>Log Out</Menu.Item>
         </Menu>
@@ -65,13 +66,16 @@ export const DashboardPage = () => {
             minHeight: 280,
           }}
         >
-
           <div>
             {offers.map(offer => (
               <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
                 fetchOffers();
               }} />
             ))}
+            <Card style={{ display: 'inline-block', width: 300, height: 278, margin: 8, textAlign: 'center', boxShadow: "5px 8px #c4c4c4" }}>
+              <div style={{ margin: 20, fontStyle: "italic", fontSize: 24 }} >Add Offer</div>
+              <PlusCircleTwoTone onClick={() => (setAddOfferVisible(true))} style={{ margin: 45, fontSize: '7em' }} />
+            </Card>
           </div>
           {addOfferVisible && (
             <Modal onCancel={() => { setAddOfferVisible(false) }}>

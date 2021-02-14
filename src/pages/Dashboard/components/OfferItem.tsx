@@ -9,7 +9,7 @@ export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({
 
     const copyLink = () => {
         navigator.clipboard.writeText(offer.link);
-        message.success("Link copied!", 2);
+        message.success("Link copied!", 1.5);
     }
 
     const deleteOffer = async () => {
@@ -27,7 +27,7 @@ export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({
         <Card
             title={offer.title}
             extra={<Button><DeleteTwoTone onClick={deleteOffer} /></Button>}
-            style={{ display: 'inline-block', width: 300, minHeight: 200, margin: 8 }}
+            style={{ display: 'inline-block', width: 300, minHeight: 200, margin: 8, boxShadow: "5px 8px #c4c4c4" }}
         >
             <div style={{ textAlign: 'center' }}>
                 <TextArea value={offer.description} style={{ border: 'none', textAlign: 'center', minHeight: 70 }} readOnly></TextArea>

@@ -4,7 +4,7 @@ import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
-import { authContext,AuthProvider } from './contexts/AuthenticationContext';
+import { authContext, AuthProvider } from './contexts/AuthenticationContext';
 import { CalendarPage } from './pages/Booking/CalendarPage';
 import { AvailabilityPage } from './pages/Availability/AvailabilityPage';
 
@@ -12,8 +12,8 @@ export const BasePage = () => {
   const { token } = useContext(authContext);
   if (token) {
     return <Redirect to="/dashboard" />;
-  } else{
-    return <Redirect to="/login" />; 
+  } else {
+    return <Redirect to="/login" />;
   }
 };
 
@@ -49,7 +49,7 @@ const AuthenticatedRoute: React.FC<RouteProps> = ({
   return <Redirect to="/" />;
 };
 
- const App: FC = () => {
+const App: FC = () => {
   useEffect(() => {
     (async function () {
       const helloRequest = await fetch("/api");
@@ -60,20 +60,19 @@ const AuthenticatedRoute: React.FC<RouteProps> = ({
 
 
   return (
-  <BrowserRouter>
-    <AuthProvider>
-      <Switch>
+    <BrowserRouter>
+      <AuthProvider>
+        <Switch>
           <UnauthenticatedRoute exact path="/login" component={LoginPage} />
           <UnauthenticatedRoute exact path="/register" component={SignUp} />
-          <UnauthenticatedRoute exact path= "/booking" component = {CalendarPage}/>
+          <UnauthenticatedRoute exact path="/booking" component={CalendarPage} />
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
           {/* <Route exact path = "user/:userid/booking/offer/:offername/:minute"/> */}
-           <Route path="/" component={BasePage} />
-          <AuthenticatedRoute exact path = "/Availability" component = {AvailabilityPage} />
+          <AuthenticatedRoute exact path="/Availability" component={AvailabilityPage} />
           <Route path="/" component={BasePage} />
-      </Switch>
-    </AuthProvider>
-  </BrowserRouter>
+        </Switch>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

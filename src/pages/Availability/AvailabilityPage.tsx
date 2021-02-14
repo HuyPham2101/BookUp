@@ -1,59 +1,83 @@
-import { TimePicker,  List ,Card} from 'antd';
+import { List, Card, Menu, Breadcrumb } from 'antd';
+import Layout, { Content, Footer, Header } from 'antd/lib/layout/layout';
 import { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Copyright } from '../../components/CopyrightComponent';
 import { authContext } from '../../contexts/AuthenticationContext';
-import { Day, DayAvailability, DayRow } from './components/DayRow';
-import jwt_decode from "jwt-decode";
+import { DayAvailability, DayRow } from './components/DayRow';
 
-const { RangePicker } = TimePicker;
 
 export const AvailabilityPage = () => {
-    const {token} = useContext(authContext);
+    const { actions: { logout } } = useContext(authContext)
+    const token = useContext(authContext);
     const [daysAvailability, setDaysAvailability] = useState<DayAvailability[]>([]);
-    const [userid, setUserId] = useState()
+    const [userid, setUserId] = useState<number>(0)
 
     const fetchAvailability = async function () {
-        let decoded : any = jwt_decode(token || "");
-        setUserId(decoded.id)
-        const availabilityRequest = await fetch("/api/availability/" + decoded.id, {
+        let tempUserId = 0;
+        const decode = token.actions.getTokenData();
+        if (decode != null) {
+            tempUserId = decode.id;
+        }
+        setUserId(tempUserId)
+        const availabilityRequest = await fetch("/api/availability/" + tempUserId, {
             method: "GET",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
         });
         if (availabilityRequest.status === 200) {
             const availabilityJSON = await availabilityRequest.json();
-            console.log(availabilityJSON.data);
             setDaysAvailability(availabilityJSON.data);
-            console.log(daysAvailability);
-
         }
     }
 
     useEffect(() => {
         fetchAvailability();
-    }, []);
-    
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return(
-        <div style = {{display :'flex', alignContent : 'center', justifyContent : "center"}} >
-            <Card title="Set your weekly Hours" extra={<a href="#">More</a>} style={{ width: 500 }}>
-            <List>
-            {/* <List.Item> <DayRow title = "Mon"/> </List.Item>
-            <List.Item> <DayRow title = "Tue"/> </List.Item>
-            <List.Item> <DayRow title = "Wed"/> </List.Item>
-            <List.Item> <DayRow title = "Thu"/> </List.Item>
-            <List.Item> <DayRow title = "Fri"/> </List.Item>
-            <List.Item> <DayRow title = "Sat"/> </List.Item>
-            <List.Item> <DayRow title = "Sun"/> </List.Item> */}
-            {/* {daysAvailability.map((dayAvailability) => {
-                <List.Item> <DayRow {...dayAvailability} /> </List.Item>
-            })} */}
 
-            {daysAvailability.map((day)=> (
-                <List.Item key={day.id}> <DayRow day={day} fetchDays={() => {fetchAvailability()}} userid= {userid} /></List.Item>
-            ))}
-            {/* <List.Item> <DayRow {daysAvailability[1]} /> </List.Item> */}
-            </List>
-            </Card>
-        </div>
+    return (
+        <Layout style={{ height: '100%' }}>
+            <Header className="header">
+                <div className="logo" />
+                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+                    <Menu.Item key="1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+                    <Menu.Item key="2"><Link to="/Availability">Availability</Link></Menu.Item>
+                    <Menu.Item key="3">nav 3</Menu.Item>
+                    <Menu.Item key="4" style={{ float: "right" }} onClick={() => logout()}>Log Out</Menu.Item>
+                </Menu>
+            </Header>
+            <Layout style={{ padding: '0 24px 24px' }}>
+                <Breadcrumb style={{ margin: '16px 0' }}>
+                    <Breadcrumb.Item>Home</Breadcrumb.Item>
+                    <Breadcrumb.Item>List</Breadcrumb.Item>
+                    <Breadcrumb.Item>Availability</Breadcrumb.Item>
+                </Breadcrumb>
+                <Content
+                    className="site-layout-background"
+                    style={{
+                        padding: 24,
+                        marginLeft: '12%',
+                        marginRight: '12%',
+                        minHeight: 280,
+                    }}
+                >
+                    <div style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                        <Card title="Set your weekly Hours" style={{ width: 500 }}>
+                            <List>
+                                {daysAvailability.map((day) => (
+                                    <List.Item key={day.id}> <DayRow day={day} fetchDays={() => { fetchAvailability() }} userid={userid} /></List.Item>
+                                ))}
+                            </List>
+                        </Card>
+                    </div>
+                </Content>
+            </Layout>
+            <Layout>
+                <Footer>
+                    <Copyright />
+                </Footer>
+            </Layout>
+        </Layout >
     )
 }
 
