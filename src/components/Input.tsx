@@ -11,6 +11,7 @@ const InputLabel = styled.label`
     line-height: 25px;
     font-size: 18px;
     transition-duration: 0.3s;
+    padding-left: 10px;
 `;
 
 const InputField = styled.input`
