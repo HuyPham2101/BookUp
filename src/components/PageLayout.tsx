@@ -15,7 +15,7 @@ export const PageLayout = (props:any) => {
         <Layout style={{ height: '100%' }}>
           <Header className="header">
             <div className="logo" />
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={props.index}>
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[`${props.index}`]}>
               <Menu.Item key="1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
               <Menu.Item key="2"><Link to="/Availability">Availability</Link></Menu.Item>
               <Menu.Item key="3"><Link to="/meetings">Meetings</Link></Menu.Item>
@@ -37,7 +37,7 @@ export const PageLayout = (props:any) => {
                 minHeight: 280,
               }}
             >
-            {props.Children}
+            {props.children}
             </Content>
           </Layout>
           <Layout>
