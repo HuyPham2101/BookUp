@@ -3,37 +3,32 @@ import { List, Tabs } from 'antd';
 import React, { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { authContext } from "../../contexts/AuthenticationContext";
-import { BookedRow, Booking, EventType, Invitee, Status} from "./components/BookedRow";
+import { BookedRow, Booking } from "./components/BookedRow";
 const { TabPane } = Tabs;
 
 
 export type BookingDateFiltered = {
     date: string,
-    booking : Booking[],
+    booking: Booking[],
 }
 
 
-// var result = objArray.map(function(a) {return a.foo;});
 export const BookingOfUserPage = () => {
     const token = useContext(authContext);
     const [userid, setUserId] = useState<number>(0)
-    const [bookings, setBookings] = useState<Booking[]>([]);
-    const [sortedBookingsMap, setSortedBookingsMap] = useState(new Map())
-    const [date, setDate ] = useState<Date[]>([]) 
+    const [sortedBookingsMap, setSortedBookingsMap] = useState<Map<Date, Booking[]>>(new Map())
 
-
-
-    const getSortedBookingsByDate = (arr:Booking[]) => {
+    const getSortedBookingsByDate = (arr: Booking[]) => {
         let sortedBookings = new Map();
-        arr.forEach((item:Booking) => {
+        arr.forEach((item: Booking) => {
             let tempDate = new Date(item.date)
             console.log("tempDate in Sort Function: " + tempDate);
             console.log("item.date: " + item.date);
 
-            if(sortedBookings.has(tempDate.toDateString())) {
+            if (sortedBookings.has(tempDate.toDateString())) {
                 sortedBookings.get(tempDate.toDateString()).push(item)
             }
-            else{
+            else {
                 let tempArr = []
                 tempArr.push(item)
                 sortedBookings.set(tempDate.toDateString(), tempArr)
@@ -55,95 +50,74 @@ export const BookingOfUserPage = () => {
         });
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
-            console.log("JSON String: ")
-            console.log(allBookingRequestJson)
-            console.log("JSON Data:")
-            console.log(allBookingRequestJson.data)
-            setBookings(allBookingRequestJson.data)
-            console.log("After Set Bookings: ")
-            console.log(bookings);
-            // console.log(filterbook(bookings))
-            // let filteredBooking = getSortedBookingsByDate(bookings)
-            // filteredBooking.forEach((value: Booking[],key:string) => {
-            //     console.log("key")
-            //     console.log(key)
-            //     value.forEach((valueitem)=> {
-            //         console.log("itemID")
-            //         console.log(valueitem.id)
-            //     })
-            // })
+            setSortedBookingsMap(getSortedBookingsByDate(allBookingRequestJson.data))
         }
-        setSortedBookingsMap(getSortedBookingsByDate(bookings))
-        console.log("Bookins from DB: ")
-        console.log(bookings)
-        console.log("Sorted Bookings: ")
-        console.log(sortedBookingsMap)
     }
 
-    function callback(key:any) {
+    function callback(key: any) {
         fetchBookings()
     }
 
     useEffect(() => {
         console.log("use Effect")
         fetchBookings();
-    }, []); 
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const parseDate = (input:any) => {
+    /* const parseDate = (input: any) => {
         let parts = input.match(/(\d+)/g);
         // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
-        return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
-      
-    }
+        return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
+
+    } */
 
     const showAllRows = () => {
-        let bookingRows : any[] = []  
-        sortedBookingsMap.forEach((value:Booking[],key:string) => {
+        let bookingRows: any[] = []
+        sortedBookingsMap.forEach((value, key) => {
             bookingRows.push(<h2> {key} </h2>)
-            value.map((itemValue) => {
-            bookingRows.push(<List.Item key = {itemValue.id}>
-                 <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
-             </List.Item>)
-            })
+            value.map((itemValue) => (
+                bookingRows.push(<List.Item key={itemValue.id}>
+                    <BookedRow booking={itemValue} fetchBookings={fetchBookings} userid={userid} />
+                </List.Item>)
+            ))
         })
         return bookingRows;
     }
 
-    const showUpcoming = () => {
+    /* const showUpcoming = () => {
         let currentDate = new Date();
         console.log("CurrentDate: " + currentDate);
-        
 
-        let html:any[] = []  
-        sortedBookingsMap.forEach((value:Booking[],key:string) => {
+
+        let html: any[] = []
+        sortedBookingsMap.forEach((value: Booking[], key: string) => {
             let keyDate = new Date(key);
             console.log("key: " + key);
             console.log("KeyDate: " + keyDate);
 
-            if(currentDate <= keyDate) {
+            if (currentDate <= keyDate) {
                 html.push(<h2> {key} </h2>)
-            
+
                 value.map((itemValue) => {
-                    html.push(<List.Item key = {itemValue.id}>
-                        <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
+                    html.push(<List.Item key={itemValue.id}>
+                        <BookedRow booking={itemValue} fetchBookings={() => fetchBookings} userid={userid} />
                     </List.Item>)
-            
+
                 })
             }
-            
+
         })
         return html
-    }
+    } */
 
     const showPast = () => {
         let currentDate = new Date();
-        let html:any[] = []  
-        sortedBookingsMap.forEach((value:Booking[],key:string) => {
+        let html: any[] = []
+        sortedBookingsMap.forEach((value, key) => {
             html.push(<h2> {key} </h2>)
-            value.map((itemValue) => {
-                if(itemValue.date < currentDate) {
-                    html.push(<List.Item key = {itemValue.id}>
-                        <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
+            value.forEach((itemValue) => {
+                if (itemValue.date < currentDate) {
+                    html.push(<List.Item key={itemValue.id}>
+                        <BookedRow booking={itemValue} fetchBookings={() => fetchBookings} userid={userid} />
                     </List.Item>)
                 }
             })
@@ -152,31 +126,24 @@ export const BookingOfUserPage = () => {
     }
 
 
-    return(
-        <PageLayout index = {3}>     
-         <h3>{moment().format('dddd, D MMMM YYYY' )}</h3>
+    return (
+        <PageLayout index={3}>
+            <h3>{moment().format('dddd, D MMMM YYYY')}</h3>
             <Tabs defaultActiveKey="1" onChange={callback}>
                 <TabPane tab="Upcoming" key="1">
-                <List>
-                    {
-                    showAllRows()
-                    }
-                    
-                </List>
+                    <List>
+                        {showAllRows()}
+                    </List>
                 </TabPane>
                 <TabPane tab="Past" key="2">
-                <List>
-                    {
-                    showPast()
-                    }
-                </List>
+                    <List>
+                        {showPast()}
+                    </List>
                 </TabPane>
                 <TabPane tab="All" key="3">
-                <List>
-                    {
-                    showAllRows()
-                    }
-                </List>
+                    <List>
+                        {showAllRows()}
+                    </List>
                 </TabPane>
             </Tabs>
         </PageLayout>

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import {message} from 'antd';
 import moment from 'moment';
 
 
@@ -11,7 +10,7 @@ export enum Status {
 
 
 export type BookItemProps = {
-    booking: Booking ;
+    booking: Booking;
     fetchBookings: () => void;
     userid: number;
 }
@@ -28,8 +27,8 @@ export type EventType = {
 }
 
 export type Invitee = {
-    id:number,
-    firstName :string,
+    id: number,
+    firstName: string,
     lastName: string,
     email: string,
     createdAt: Date,
@@ -42,24 +41,24 @@ export type Booking = {
     updatedAt: Date,
     deletedAt: Date,
     date: Date,
-    eventType : EventType,
-    status : Status,
-    invitee : Invitee
+    eventType: EventType,
+    status: Status,
+    invitee: Invitee
 }
 
 export const BookedRow: React.FC<BookItemProps> = ({
-    booking, fetchBookings,userid
+    booking, fetchBookings, userid
 }) => {
-    //console.log("mit Moment: " + moment(booking.date).add(booking.eventType.duration, "minutes").format("hh:mm"));
+    console.log("mit Moment: " + moment(booking.date).format("MMMM Do YYYY, h:mm"));
 
     return (
         <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
             <div>
-            <p>{new Date(booking.date).getHours() - 1 }:{new Date(booking.date).getMinutes()}</p>
+                <p>{new Date(booking.date).getHours() - 1}:{new Date(booking.date).getMinutes()}</p>
 
-            <p>- {moment(booking.date).add(booking.eventType.duration, "minutes").format("hh:mm")}</p>
-            <p>{booking.invitee.firstName}</p>
-            <p>{booking.invitee.lastName}</p>
+                <p>- {moment(booking.date).add(booking.eventType.duration, "minutes").format("hh:mm a")}</p>
+                <p>{booking.invitee.firstName}</p>
+                <p>{booking.invitee.lastName}</p>
             </div>
         </form>
     )
