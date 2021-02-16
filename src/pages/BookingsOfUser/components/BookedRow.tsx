@@ -1,7 +1,7 @@
 
 import React from 'react';
 import moment from 'moment';
-
+import momentTimezone from 'moment-timezone'
 
 export enum Status {
     Inprocess,
@@ -49,14 +49,12 @@ export type Booking = {
 export const BookedRow: React.FC<BookItemProps> = ({
     booking, fetchBookings, userid
 }) => {
-    console.log("mit Moment: " + moment(booking.date).format("MMMM Do YYYY, h:mm"));
-
+    console.log("mit Moment: " + momentTimezone(booking.date).tz("Europa/Berlin"));
+    
     return (
         <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
             <div>
-                <p>{new Date(booking.date).getHours() - 1}:{new Date(booking.date).getMinutes()}</p>
-
-                <p>- {moment(booking.date).add(booking.eventType.duration, "minutes").format("hh:mm a")}</p>
+                <p>{moment(booking.date).subtract(1,"hours").format("HH:mm")} - {moment(booking.date).subtract(1,"hours").add(booking.eventType.duration, "minutes").format("HH:mm")}</p>
                 <p>{booking.invitee.firstName}</p>
                 <p>{booking.invitee.lastName}</p>
             </div>
