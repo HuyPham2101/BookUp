@@ -10,22 +10,36 @@ function callback(key:any) {
 }
 
 export type BookingDateFiltered = {
-    date: Date,
+    date: string,
     booking : Booking[],
 }
+
+
 // var result = objArray.map(function(a) {return a.foo;});
 export const BookingOfUserPage = () => {
     const token = useContext(authContext);
     const [userid, setUserId] = useState<number>(0)
     const [bookings, setBookings] = useState<Booking[]>([]);
-    const [filter, setfilter] = useState<[]>([])
+    const [filterBookingMap, setfilterBookingMap] = useState(new Map())
     const [date, setDate ] = useState<Date[]>([]) 
 
-    let filteredBooking = (arr:any) => arr.reduce(function (r:any, a:any) {
-        r[a.date] = r[a.date] || [];
-        r[a.date].push(a);
-        return r;
-    }, Object.create(null));
+
+
+    const filterbook = (arr:Booking[]) => {
+        let myMap = new Map();
+        arr.forEach((item:Booking) => {
+            let tempDate = new Date(item.date)
+            if(myMap.has(tempDate.toDateString())) {
+                myMap.get(tempDate.toDateString()).push(item)
+            }
+            else{
+                let temparr = []
+                temparr.push(item)
+                myMap.set(tempDate.toDateString(), temparr)
+            }
+        })
+        return myMap;
+    }
 
     const fetchBookings = async function () {
         let tempUserId = 0;
@@ -42,34 +56,20 @@ export const BookingOfUserPage = () => {
             const allBookingRequestJson = await allBookingRequest.json();
             console.log(allBookingRequestJson)
             setBookings(allBookingRequestJson.data)
-            // console.log(" before booking")
-            // console.log(bookings[0].)
-            // console.log(" after booking")
-            let filting223: BookingDateFiltered = filteredBooking(bookings)
-            console.log(filting223)
-            // let temparr = [][]
-            // temparr = filting223;
-            // console.log("111111")
-            // for(let day of temparr){
-            //     console.log(day)
-            //     for(let data of day) {
-            //         console.log(data)
-            //     }
-            // }
-            console.log("test")
-            console.log(filting223.booking)
-            // for(let booking of bookings){
-            //     console.log(booking.date)
-            //     for(let invitee of booking.invitee)
-            // }
-            for(let[key,value] of Object.entries(filting223)){
+            // console.log(filterbook(bookings))
+            let filteredBooking = filterbook(bookings)
+            filteredBooking.forEach((value: Booking[],key:string) => {
                 console.log("key")
                 console.log(key)
-                console.log("value")
-                // console.log(value.)
-            }
-
+                value.forEach((valueitem)=> {
+                    console.log("itemID")
+                    console.log(valueitem.id)
+                })
+            })
         }
+        setfilterBookingMap(filterbook(bookings))
+        console.log(filterBookingMap)
+        console.log(bookings)
     }
     useEffect(() => {
         fetchBookings();
@@ -82,19 +82,28 @@ export const BookingOfUserPage = () => {
       
     }
 
+    const showRow = () => {
+        let html:any[] = []  
+        filterBookingMap.forEach((value:Booking[],key:string) => {
+            html.push(<h2> {key} </h2>)
+            value.map((itemValue) => {
+             html.push(<List.Item key = {itemValue.id}>
+                 <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
+             </List.Item>)
+            })
+        })
+        console.log("HHHss")
+        return html
+    }
     return(
         <PageLayout index = {3}>     
          <h3>{moment().format('dddd, D MMMM YYYY' )}</h3>
             <Tabs defaultActiveKey="1" onChange={callback}>
                 <TabPane tab="Upcoming" key="1">
                 <List>
-                {/*
-                    Object.entries(filteredBooking(booking)).map(([key,value]) => {
-                        return(
-                        <div> {key} : {value} </div>
-                        )
-                    })
-                } */}
+                {
+                    showRow()
+                }
                 </List>
                 </TabPane>
                 <TabPane tab="Past" key="2">

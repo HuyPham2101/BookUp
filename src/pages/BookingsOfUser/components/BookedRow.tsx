@@ -52,10 +52,10 @@ export const BookedRow: React.FC<BookItemProps> = ({
 }) => {
     return (
         <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
-            <div >
-                {/* <div>{booking.date.getHours()}</div> */}
-            {/* <p>{booking.invitee.firstName}</p> */}
-            {/* <p>{booking.invitee.lastName}</p> */}
+            <div>
+            <p>{new Date(booking.date).getHours() - 1 }:{new Date(booking.date).getMinutes()}</p>
+            <p>{booking.invitee.firstName}</p>
+            <p>{booking.invitee.lastName}</p>
             </div>
         </form>
     )
