@@ -50,10 +50,14 @@ export type Booking = {
 export const BookedRow: React.FC<BookItemProps> = ({
     booking, fetchBookings,userid
 }) => {
+    //console.log("mit Moment: " + moment(booking.date).add(booking.eventType.duration, "minutes").format("hh:mm"));
+
     return (
         <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
             <div>
             <p>{new Date(booking.date).getHours() - 1 }:{new Date(booking.date).getMinutes()}</p>
+
+            <p>- {moment(booking.date).add(booking.eventType.duration, "minutes").format("hh:mm")}</p>
             <p>{booking.invitee.firstName}</p>
             <p>{booking.invitee.lastName}</p>
             </div>

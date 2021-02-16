@@ -5,9 +5,7 @@ import moment from "moment";
 import { authContext } from "../../contexts/AuthenticationContext";
 import { BookedRow, Booking, EventType, Invitee, Status} from "./components/BookedRow";
 const { TabPane } = Tabs;
-function callback(key:any) {
-    console.log(key);
-}
+
 
 export type BookingDateFiltered = {
     date: string,
@@ -20,25 +18,28 @@ export const BookingOfUserPage = () => {
     const token = useContext(authContext);
     const [userid, setUserId] = useState<number>(0)
     const [bookings, setBookings] = useState<Booking[]>([]);
-    const [filterBookingMap, setfilterBookingMap] = useState(new Map())
+    const [sortedBookingsMap, setSortedBookingsMap] = useState(new Map())
     const [date, setDate ] = useState<Date[]>([]) 
 
 
 
-    const filterbook = (arr:Booking[]) => {
-        let myMap = new Map();
+    const getSortedBookingsByDate = (arr:Booking[]) => {
+        let sortedBookings = new Map();
         arr.forEach((item:Booking) => {
             let tempDate = new Date(item.date)
-            if(myMap.has(tempDate.toDateString())) {
-                myMap.get(tempDate.toDateString()).push(item)
+            console.log("tempDate in Sort Function: " + tempDate);
+            console.log("item.date: " + item.date);
+
+            if(sortedBookings.has(tempDate.toDateString())) {
+                sortedBookings.get(tempDate.toDateString()).push(item)
             }
             else{
-                let temparr = []
-                temparr.push(item)
-                myMap.set(tempDate.toDateString(), temparr)
+                let tempArr = []
+                tempArr.push(item)
+                sortedBookings.set(tempDate.toDateString(), tempArr)
             }
         })
-        return myMap;
+        return sortedBookings;
     }
 
     const fetchBookings = async function () {
@@ -54,24 +55,37 @@ export const BookingOfUserPage = () => {
         });
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
+            console.log("JSON String: ")
             console.log(allBookingRequestJson)
+            console.log("JSON Data:")
+            console.log(allBookingRequestJson.data)
             setBookings(allBookingRequestJson.data)
+            console.log("After Set Bookings: ")
+            console.log(bookings);
             // console.log(filterbook(bookings))
-            let filteredBooking = filterbook(bookings)
-            filteredBooking.forEach((value: Booking[],key:string) => {
-                console.log("key")
-                console.log(key)
-                value.forEach((valueitem)=> {
-                    console.log("itemID")
-                    console.log(valueitem.id)
-                })
-            })
+            // let filteredBooking = getSortedBookingsByDate(bookings)
+            // filteredBooking.forEach((value: Booking[],key:string) => {
+            //     console.log("key")
+            //     console.log(key)
+            //     value.forEach((valueitem)=> {
+            //         console.log("itemID")
+            //         console.log(valueitem.id)
+            //     })
+            // })
         }
-        setfilterBookingMap(filterbook(bookings))
-        console.log(filterBookingMap)
+        setSortedBookingsMap(getSortedBookingsByDate(bookings))
+        console.log("Bookins from DB: ")
         console.log(bookings)
+        console.log("Sorted Bookings: ")
+        console.log(sortedBookingsMap)
     }
+
+    function callback(key:any) {
+        fetchBookings()
+    }
+
     useEffect(() => {
+        console.log("use Effect")
         fetchBookings();
     }, []); 
 
@@ -82,36 +96,86 @@ export const BookingOfUserPage = () => {
       
     }
 
-    const showRow = () => {
-        let html:any[] = []  
-        filterBookingMap.forEach((value:Booking[],key:string) => {
-            html.push(<h2> {key} </h2>)
+    const showAllRows = () => {
+        let bookingRows : any[] = []  
+        sortedBookingsMap.forEach((value:Booking[],key:string) => {
+            bookingRows.push(<h2> {key} </h2>)
             value.map((itemValue) => {
-             html.push(<List.Item key = {itemValue.id}>
+            bookingRows.push(<List.Item key = {itemValue.id}>
                  <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
              </List.Item>)
             })
         })
-        console.log("HHHss")
+        return bookingRows;
+    }
+
+    const showUpcoming = () => {
+        let currentDate = new Date();
+        console.log("CurrentDate: " + currentDate);
+        
+
+        let html:any[] = []  
+        sortedBookingsMap.forEach((value:Booking[],key:string) => {
+            let keyDate = new Date(key);
+            console.log("key: " + key);
+            console.log("KeyDate: " + keyDate);
+
+            if(currentDate <= keyDate) {
+                html.push(<h2> {key} </h2>)
+            
+                value.map((itemValue) => {
+                    html.push(<List.Item key = {itemValue.id}>
+                        <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
+                    </List.Item>)
+            
+                })
+            }
+            
+        })
         return html
     }
+
+    const showPast = () => {
+        let currentDate = new Date();
+        let html:any[] = []  
+        sortedBookingsMap.forEach((value:Booking[],key:string) => {
+            html.push(<h2> {key} </h2>)
+            value.map((itemValue) => {
+                if(itemValue.date < currentDate) {
+                    html.push(<List.Item key = {itemValue.id}>
+                        <BookedRow booking = {itemValue} fetchBookings = {() => fetchBookings} userid= {userid}/>
+                    </List.Item>)
+                }
+            })
+        })
+        return html
+    }
+
+
     return(
         <PageLayout index = {3}>     
          <h3>{moment().format('dddd, D MMMM YYYY' )}</h3>
             <Tabs defaultActiveKey="1" onChange={callback}>
                 <TabPane tab="Upcoming" key="1">
                 <List>
-                {
-                    showRow()
-                }
+                    {
+                    showAllRows()
+                    }
+                    
                 </List>
                 </TabPane>
                 <TabPane tab="Past" key="2">
                 <List>
+                    {
+                    showPast()
+                    }
                 </List>
                 </TabPane>
                 <TabPane tab="All" key="3">
                 <List>
+                    {
+                    showAllRows()
+                    }
                 </List>
                 </TabPane>
             </Tabs>
