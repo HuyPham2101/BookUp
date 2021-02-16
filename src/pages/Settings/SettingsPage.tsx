@@ -1,5 +1,5 @@
-import { ProfileOutlined, UserOutlined } from "@ant-design/icons"
-import { Dropdown, Menu, message, Upload } from "antd"
+import { EditTwoTone, ProfileOutlined, UserOutlined } from "@ant-design/icons"
+import { Badge, Dropdown, Menu, message, Upload } from "antd"
 import Avatar from "antd/lib/avatar/avatar"
 import Layout, { Content, Footer, Header } from "antd/lib/layout/layout"
 import { useContext, useEffect, useState } from "react"
@@ -73,23 +73,26 @@ export const SettingsPage = () => {
                         backgroundColor: '#fff'
                     }}
                 >
-                    <div style={{ display: 'inline-block', margin: 35 }}>
-                        {user && (
-                            <Upload {...props}>
-                                <Avatar
-                                    size={84}
-                                    src={imgUrl}
-                                    icon={<UserOutlined />}
-                                />
-                            </Upload>
-
-                        )}
-                    </div >
-                    <div style={{ display: 'inline-block' }}>
-                        <Name user={user} />
-                        <Email user={user} />
+                    <div style={{ margin: 10, borderRadius: 5, backgroundColor: "#f0f0f0" }}>
+                        <div style={{ cursor: "pointer", display: 'inline-block', margin: 35 }}>
+                            {user && (
+                                <Upload {...props}>
+                                    <Badge count={<EditTwoTone />}>
+                                        <Avatar
+                                            size={84}
+                                            src={imgUrl}
+                                            icon={<UserOutlined />}
+                                        />
+                                    </Badge>
+                                </Upload>
+                            )}
+                        </div >
+                        <div style={{ display: 'inline-block' }}>
+                            <Name user={user} />
+                            <Email user={user} />
+                        </div>
                     </div>
-                    <SettingsForm user={user} />
+                    <SettingsForm fetchUser={fetchUser} user={user} />
                 </Content>
             </Layout>
             <Footer>
