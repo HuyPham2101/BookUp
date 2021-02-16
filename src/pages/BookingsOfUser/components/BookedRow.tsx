@@ -1,7 +1,6 @@
 
 import React from 'react';
 import moment from 'moment';
-import momentTimezone from 'moment-timezone'
 
 export enum Status {
     Inprocess,
@@ -49,7 +48,6 @@ export type Booking = {
 export const BookedRow: React.FC<BookItemProps> = ({
     booking, fetchBookings, userid
 }) => {
-    console.log("mit Moment: " + momentTimezone(booking.date).tz("Europa/Berlin"));
     
     return (
         <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
