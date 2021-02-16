@@ -7,6 +7,7 @@ import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router
 import { authContext, AuthProvider } from './contexts/AuthenticationContext';
 import { CalendarPage } from './pages/Booking/CalendarPage';
 import { AvailabilityPage } from './pages/Availability/AvailabilityPage';
+import { SettingsPage } from './pages/Settings/SettingsPage'
 
 export const BasePage = () => {
   const { token } = useContext(authContext);
@@ -69,6 +70,7 @@ const App: FC = () => {
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
           {/* <Route exact path = "user/:userid/booking/offer/:offername/:minute"/> */}
           <AuthenticatedRoute exact path="/Availability" component={AvailabilityPage} />
+          <AuthenticatedRoute exact path="/settings" component={SettingsPage} />
           <Route path="/" component={BasePage} />
         </Switch>
       </AuthProvider>
