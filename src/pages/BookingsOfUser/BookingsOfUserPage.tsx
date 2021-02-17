@@ -15,7 +15,6 @@ export type BookingDateFiltered = {
 
 export const BookingOfUserPage = () => {
     const token = useContext(authContext);
-    const [userid, setUserId] = useState<number>(0)
     const [groupedBookingsMap, setGroupedBookingsMap] = useState<Map<Date, Booking[]>>(new Map())
 
     const getBookingsGroupedByDate = (arr: Booking[]) => {
@@ -23,15 +22,15 @@ export const BookingOfUserPage = () => {
         arr.forEach((item: Booking) => {
 
             console.log("item.date: ", item.date);
-            console.log("new date: " , new Date());
+            console.log("new date: ", new Date());
 
-            if (groupedBookings.has(item.date)) {
-                groupedBookings.get(item.date).push(item)
+            if (groupedBookings.has(item.date.toDateString())) {
+                groupedBookings.get(item.date.toDateString()).push(item)
             }
             else {
                 let tempArr = []
                 tempArr.push(item)
-                groupedBookings.set(item.date, tempArr)
+                groupedBookings.set(item.date.toDateString(), tempArr)
             }
         })
         return groupedBookings;
@@ -43,7 +42,6 @@ export const BookingOfUserPage = () => {
         if (decode != null) {
             tempUserId = decode.id;
         }
-        setUserId(tempUserId)
         const allBookingRequest = await fetch("/api/booking/all/" + tempUserId, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -51,18 +49,18 @@ export const BookingOfUserPage = () => {
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
             let bookings: Booking[] = allBookingRequestJson.data;
-            for(let booking of bookings){
+            for (let booking of bookings) {
                 booking.date = new Date(booking.date);
                 booking.date.setHours(booking.date.getHours() - 1);
             }
             bookings.sort((booking1: Booking, booking2: Booking) => {
-                if(booking1.date < booking2.date){
+                if (booking1.date < booking2.date) {
                     return -1;
                 }
-                if( booking1.date > booking2.date){
+                if (booking1.date > booking2.date) {
                     return 1;
                 }
-                    return 0;
+                return 0;
             });
             setGroupedBookingsMap(getBookingsGroupedByDate(bookings));
         }
@@ -73,7 +71,6 @@ export const BookingOfUserPage = () => {
     }
 
     useEffect(() => {
-        console.log("use Effect")
         fetchBookings();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -89,13 +86,13 @@ export const BookingOfUserPage = () => {
         console.log("ENDTIME VOR SET: ", endTime);
         console.log("DURATION:", booking.eventType.duration);
         endTime.setMinutes(endTime.getMinutes() + booking.eventType.duration);
-       
+
         console.log("ENDTIME NACH SET: ", endTime);
-        const time = booking.date.toLocaleTimeString("de-DE").substring(0,5) + " - " + endTime.toLocaleTimeString("de-De").substring(0,5);
+        const time = booking.date.toLocaleTimeString("de-DE").substring(0, 5) + " - " + endTime.toLocaleTimeString("de-De").substring(0, 5);
         console.log("RESULTAT TIME: ", time);
         const invitee = booking.invitee.firstName + " " + booking.invitee.lastName;
 
-        
+
 
         const bookingRowJson =
         {
@@ -103,7 +100,7 @@ export const BookingOfUserPage = () => {
             "title": booking.eventType.title,
             "description": booking.eventType.description,
             "invitee": invitee
-        } 
+        }
         //  booking.date.toLocaleTimeString("de-DE").substring(0,5) + " - " + endTime.toLocaleTimeString("de-De").substring(0,5) + "\n"
         //  + "Event: " + booking.eventType.title + "\n" 
         //  + "Description: " + booking.eventType.description + "\n" 
@@ -116,25 +113,25 @@ export const BookingOfUserPage = () => {
         let bookingRows: any[] = []
         let formattedBookings: any[] = [];
         groupedBookingsMap.forEach((value, key) => {
-            for(let booking of value){
+            for (let booking of value) {
                 formattedBookings.push(getBookingRowFormattedString(booking))
             }
- //           bookingRows.push(<h2> {key} </h2>)
+            //           bookingRows.push(<h2> {key} </h2>)
             bookingRows.push(
-                <List 
-                //  style = {{borderColor: "black", borderInlineColor: "black"}}
-                 size = "default"
-                 header={key.toDateString()}
-                 footer={" "}
-                 bordered
-                 dataSource={formattedBookings}
-                 renderItem={item => 
-                 <List.Item>
-                     <h4>{item.time}</h4>
-                     <List.Item.Meta title = {item.title} style={{fontWeight: "bold"}}/>
-                     <List.Item.Meta description= {item.description} />
-                     {item.invitee}
-                </List.Item>}/>
+                <List
+                    //  style = {{borderColor: "black", borderInlineColor: "black"}}
+                    size="default"
+                    header={key}
+                    footer={" "}
+                    bordered
+                    dataSource={formattedBookings}
+                    renderItem={item =>
+                        <List.Item>
+                            <h4>{item.time}</h4>
+                            <List.Item.Meta title={item.title} style={{ fontWeight: "bold" }} />
+                            <List.Item.Meta description={item.description} />
+                            {item.invitee}
+                        </List.Item>} />
             )
             // value.map((itemValue) => (
             //     bookingRows.push(<List.Item key={itemValue.id}>
@@ -144,29 +141,29 @@ export const BookingOfUserPage = () => {
             formattedBookings = [];
         })
         console.log("BOOKINGROWSSSS", bookingRows);
-        console.log("FORMATTEDVOOOOKIGNGSSS",formattedBookings);
+        console.log("FORMATTEDVOOOOKIGNGSSS", formattedBookings);
         return bookingRows;
     }
 
-     const showUpcoming = () => {
+    /* const showUpcoming = () => {
         let currentDate = new Date();
         console.log("CurrentDate: " + currentDate);
 
 
         let bookingRows: any[] = []
-        let upcomingBookingsMap = new Map<Date,Booking[]>();
-        groupedBookingsMap.forEach((value,key) => {
+        let upcomingBookingsMap = new Map<Date, Booking[]>();
+        groupedBookingsMap.forEach((value, key) => {
             console.log("dateofBOok")
             console.log(value[0].date)
-           upcomingBookingsMap.set(key, value.filter((bookingItem) => {
-            //    const bookingdate = new Date(bookingItem.date)
-            const bookingDate = moment(bookingItem.date).subtract(1,"hours")
-               console.log(bookingDate)
-               return bookingDate.toDate() >= currentDate
-           }))
+            upcomingBookingsMap.set(key, value.filter((bookingItem) => {
+                //    const bookingdate = new Date(bookingItem.date)
+                const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                console.log(bookingDate)
+                return bookingDate.toDate() >= currentDate
+            }))
         })
-        upcomingBookingsMap.forEach((value , key) => {
-            if (value.length !== 0) {            
+        upcomingBookingsMap.forEach((value, key) => {
+            if (value.length !== 0) {
                 bookingRows.push(<h2> {key} </h2>)
 
                 value.map((itemValue) => {
@@ -178,7 +175,7 @@ export const BookingOfUserPage = () => {
             }
         })
         return bookingRows
-    } 
+    }
 
     const showPast = () => {
         let currentDate = new Date();
@@ -186,19 +183,19 @@ export const BookingOfUserPage = () => {
 
 
         let bookingRows: any[] = []
-        let pastBookingsMap = new Map<Date,Booking[]>();
-        groupedBookingsMap.forEach((value,key) => {
+        let pastBookingsMap = new Map<Date, Booking[]>();
+        groupedBookingsMap.forEach((value, key) => {
             console.log("dateofBOok")
             console.log(value[0].date)
             pastBookingsMap.set(key, value.filter((bookingItem) => {
-            //    const bookingdate = new Date(bookingItem.date)
-            const bookingDate = moment(bookingItem.date).subtract(1,"hours")
-               console.log(bookingDate)
-               return bookingDate.toDate() < currentDate
-           }))
+                //    const bookingdate = new Date(bookingItem.date)
+                const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                console.log(bookingDate)
+                return bookingDate.toDate() < currentDate
+            }))
         })
-        pastBookingsMap.forEach((value , key) => {
-            if (value.length !== 0) {            
+        pastBookingsMap.forEach((value, key) => {
+            if (value.length !== 0) {
                 bookingRows.push(<h2> {key} </h2>)
 
                 value.map((itemValue) => {
@@ -210,7 +207,7 @@ export const BookingOfUserPage = () => {
             }
         })
         return bookingRows
-    }
+    } */
 
 
     return (
@@ -219,16 +216,16 @@ export const BookingOfUserPage = () => {
             <Tabs defaultActiveKey="1" onChange={callback}>
                 <TabPane tab="Upcoming" key="1">
                     <List>
-                        {showUpcoming()}
+                        {/* {showUpcoming()} */}
                     </List>
                 </TabPane>
                 <TabPane tab="Past" key="2">
                     <List>
-                        {showPast()}
+                        {/* {showPast()} */}
                     </List>
                 </TabPane>
                 <TabPane tab="All" key="3">
-                        {showAllRows()}
+                    {showAllRows()}
                 </TabPane>
             </Tabs>
         </PageLayout>
