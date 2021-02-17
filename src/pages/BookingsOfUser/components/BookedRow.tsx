@@ -48,14 +48,19 @@ export type Booking = {
 export const BookedRow: React.FC<BookItemProps> = ({
     booking, fetchBookings, userid
 }) => {
-    
+    const getEndTime = () : string => {
+        let endTime = booking.date;
+        endTime.setMinutes(booking.date.getMinutes() + booking.eventType.duration);
+        return endTime.toLocaleTimeString("de-De").substring(0,5);
+    }
+    //{moment(booking.date).subtract(1,"hours").add(booking.eventType.duration, "minutes").format("HH:mm")
     return (
-        <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
+        // <form action="" style={{ display: 'flex', justifyContent: 'space-evenly', position: 'relative' }}>
             <div>
-                <p>{moment(booking.date).subtract(1,"hours").format("HH:mm")} - {moment(booking.date).subtract(1,"hours").add(booking.eventType.duration, "minutes").format("HH:mm")}</p>
+                <p>{ booking.date.toLocaleTimeString("de-DE").substring(0,5) } - {getEndTime() } </p>
                 <p>{booking.invitee.firstName}</p>
                 <p>{booking.invitee.lastName}</p>
             </div>
-        </form>
+        // </form>
     )
-}
+}                                             
