@@ -10,7 +10,6 @@ export const FilterInput: React.FC<{ offers: Offer[], setFilteredOffer: React.Di
             filteredOffers.description.includes(e.target.value) ||
             filteredOffers.duration.toString().includes(e.target.value)
         )))
-
         if (e.target.value === "") {
             setFiltering(false);
         } else {
@@ -18,16 +17,15 @@ export const FilterInput: React.FC<{ offers: Offer[], setFilteredOffer: React.Di
         }
     }
     return (
-        <>
-            <div>Filter Offers</div>
+        <div style={{ margin: "10px 12%" }}>
+            <h3>Filter Offers</h3>
             <Input
                 id="filterInput"
                 name="filter"
-                size="small"
                 onChange={filterOffers}
                 style={{ maxWidth: 300 }}
                 prefix={<SearchOutlined />}
                 placeholder="search..." />
-        </>
+        </div>
     )
 }

@@ -51,6 +51,7 @@ export const DashboardPage = () => {
         </Menu>
       </Header>
       <Layout style={{ padding: '0 24px 24px' }}>
+        <FilterInput offers={offers} setFilteredOffer={setFilteredOffer} setFiltering={setFiltering} />
         <Content
           className="site-layout-background"
           style={{
@@ -62,7 +63,6 @@ export const DashboardPage = () => {
 
           }}
         >
-          <FilterInput offers={offers} setFilteredOffer={setFilteredOffer} setFiltering={setFiltering} />
           <div>
             <Card
               onClick={() => (setAddOfferVisible(true))}
