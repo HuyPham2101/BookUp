@@ -57,7 +57,6 @@ export const BookingOfUserPage = () => {
     }
 
     useEffect(() => {
-        console.log("use Effect")
         fetchBookings();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -81,25 +80,19 @@ export const BookingOfUserPage = () => {
         return bookingRows;
     }
 
-     const showUpcoming = () => {
+    const showUpcoming = () => {
         let currentDate = new Date();
-        console.log("CurrentDate: " + currentDate);
-
-
         let bookingRows: any[] = []
-        let upcomingBookingsMap = new Map<Date,Booking[]>();
-        sortedBookingsMap.forEach((value,key) => {
-            console.log("dateofBOok")
-            console.log(value[0].date)
-           upcomingBookingsMap.set(key, value.filter((bookingItem) => {
-            //    const bookingdate = new Date(bookingItem.date)
-            const bookingDate = moment(bookingItem.date).subtract(1,"hours")
-               console.log(bookingDate)
-               return bookingDate.toDate() >= currentDate
-           }))
+        let upcomingBookingsMap = new Map<Date, Booking[]>();
+        sortedBookingsMap.forEach((value, key) => {
+            upcomingBookingsMap.set(key, value.filter((bookingItem) => {
+                //    const bookingdate = new Date(bookingItem.date)
+                const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                return bookingDate.toDate() >= currentDate
+            }))
         })
-        upcomingBookingsMap.forEach((value , key) => {
-            if (value.length !== 0) {            
+        upcomingBookingsMap.forEach((value, key) => {
+            if (value.length !== 0) {
                 bookingRows.push(<h2> {key} </h2>)
 
                 value.map((itemValue) => {
@@ -111,27 +104,23 @@ export const BookingOfUserPage = () => {
             }
         })
         return bookingRows
-    } 
+    }
 
     const showPast = () => {
         let currentDate = new Date();
-        console.log("CurrentDate: " + currentDate);
 
 
         let bookingRows: any[] = []
-        let pastBookingsMap = new Map<Date,Booking[]>();
-        sortedBookingsMap.forEach((value,key) => {
-            console.log("dateofBOok")
-            console.log(value[0].date)
+        let pastBookingsMap = new Map<Date, Booking[]>();
+        sortedBookingsMap.forEach((value, key) => {
             pastBookingsMap.set(key, value.filter((bookingItem) => {
-            //    const bookingdate = new Date(bookingItem.date)
-            const bookingDate = moment(bookingItem.date).subtract(1,"hours")
-               console.log(bookingDate)
-               return bookingDate.toDate() < currentDate
-           }))
+                //    const bookingdate = new Date(bookingItem.date)
+                const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                return bookingDate.toDate() < currentDate
+            }))
         })
-        pastBookingsMap.forEach((value , key) => {
-            if (value.length !== 0) {            
+        pastBookingsMap.forEach((value, key) => {
+            if (value.length !== 0) {
                 bookingRows.push(<h2> {key} </h2>)
 
                 value.map((itemValue) => {

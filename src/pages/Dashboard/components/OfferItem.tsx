@@ -26,8 +26,8 @@ export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({
     return (
         <Card
             title={offer.title}
-            extra={<Button><DeleteTwoTone onClick={deleteOffer} /></Button>}
-            style={{ display: 'inline-block', width: 300, minHeight: 200, margin: 8, boxShadow: "5px 8px #c4c4c4" }}
+            extra={<Button onClick={deleteOffer}><DeleteTwoTone /></Button>}
+            style={{ display: 'inline-block', width: 300, minHeight: 200, margin: 8, boxShadow: "5px 8px 8px #c4c4c4 " }}
         >
             <div style={{ textAlign: 'center' }}>
                 <TextArea value={offer.description} style={{ border: 'none', textAlign: 'center', minHeight: 70 }} readOnly></TextArea>

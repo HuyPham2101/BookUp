@@ -17,7 +17,7 @@ export const FilterInput: React.FC<{ offers: Offer[], setFilteredOffer: React.Di
         }
     }
     return (
-        <div style={{ margin: "10px 12%" }}>
+        <div style={{ margin: "10px 5px" }}>
             <h3>Filter Offers</h3>
             <Input
                 id="filterInput"
