@@ -10,6 +10,7 @@ import { OfferItem } from "./components/OfferItem"
 import { Link } from 'react-router-dom';
 import { PlusCircleTwoTone, ProfileOutlined } from '@ant-design/icons';
 import { ProfileMenu } from "../../components/ProfileMenu"
+import { FilterInput } from "./components/FilterInput"
 
 
 const { Header, Content } = Layout;
@@ -19,6 +20,8 @@ export const DashboardPage = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const token = useContext(authContext);
   const [addOfferVisible, setAddOfferVisible] = useState(false);
+  const [filteredOffers, setFilteredOffer] = useState<Offer[]>();
+  const [filtering, setFiltering] = useState<boolean>(false);
 
   const fetchOffers = async function () {
     const userId = token.actions.getTokenData()?.id;
@@ -46,9 +49,9 @@ export const DashboardPage = () => {
             <Dropdown trigger={['click']} overlay={() => ProfileMenu(logout)}><span><ProfileOutlined style={{ fontSize: 30 }} /></span></Dropdown>
           </div>
         </Menu>
-
       </Header>
       <Layout style={{ padding: '0 24px 24px' }}>
+        <FilterInput offers={offers} setFilteredOffer={setFilteredOffer} setFiltering={setFiltering} />
         <Content
           className="site-layout-background"
           style={{
@@ -56,7 +59,8 @@ export const DashboardPage = () => {
             marginLeft: '12%',
             marginRight: '12%',
             minHeight: 280,
-            backgroundColor: '#fff'
+            backgroundColor: '#fff',
+
           }}
         >
           <div>
@@ -68,11 +72,20 @@ export const DashboardPage = () => {
               <div style={{ margin: 20, fontStyle: "italic", fontSize: 24 }} >Add Offer</div>
               <PlusCircleTwoTone style={{ margin: 45, fontSize: '7em' }} />
             </Card>
-            {offers.map(offer => (
-              <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
-                fetchOffers();
-              }} />
-            ))}
+            {!filtering && (
+              offers.map(offer => (
+                <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
+                  fetchOffers();
+                }} />
+              ))
+            )}
+            {filtering && (
+              filteredOffers?.map(offer => (
+                <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
+                  fetchOffers();
+                }} />
+              ))
+            )}
           </div>
           {addOfferVisible && (
             <Modal onCancel={() => { setAddOfferVisible(false) }}>
