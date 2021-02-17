@@ -22,8 +22,6 @@ export const BookingOfUserPage = () => {
         let sortedBookings = new Map();
         arr.forEach((item: Booking) => {
             let tempDate = new Date(item.date)
-            console.log("tempDate in Sort Function: " + tempDate);
-            console.log("item.date: " + item.date);
 
             if (sortedBookings.has(tempDate.toDateString())) {
                 sortedBookings.get(tempDate.toDateString()).push(item)
@@ -83,46 +81,68 @@ export const BookingOfUserPage = () => {
         return bookingRows;
     }
 
-    /* const showUpcoming = () => {
+     const showUpcoming = () => {
         let currentDate = new Date();
         console.log("CurrentDate: " + currentDate);
 
 
-        let html: any[] = []
-        sortedBookingsMap.forEach((value: Booking[], key: string) => {
-            let keyDate = new Date(key);
-            console.log("key: " + key);
-            console.log("KeyDate: " + keyDate);
-
-            if (currentDate <= keyDate) {
-                html.push(<h2> {key} </h2>)
+        let bookingRows: any[] = []
+        let upcomingBookingsMap = new Map<Date,Booking[]>();
+        sortedBookingsMap.forEach((value,key) => {
+            console.log("dateofBOok")
+            console.log(value[0].date)
+           upcomingBookingsMap.set(key, value.filter((bookingItem) => {
+            //    const bookingdate = new Date(bookingItem.date)
+            const bookingDate = moment(bookingItem.date).subtract(1,"hours")
+               console.log(bookingDate)
+               return bookingDate.toDate() >= currentDate
+           }))
+        })
+        upcomingBookingsMap.forEach((value , key) => {
+            if (value.length !== 0) {            
+                bookingRows.push(<h2> {key} </h2>)
 
                 value.map((itemValue) => {
-                    html.push(<List.Item key={itemValue.id}>
+                    bookingRows.push(<List.Item key={itemValue.id}>
                         <BookedRow booking={itemValue} fetchBookings={() => fetchBookings} userid={userid} />
                     </List.Item>)
 
                 })
             }
-
         })
-        return html
-    } */
+        return bookingRows
+    } 
 
     const showPast = () => {
         let currentDate = new Date();
-        let html: any[] = []
-        sortedBookingsMap.forEach((value, key) => {
-            html.push(<h2> {key} </h2>)
-            value.forEach((itemValue) => {
-                if (itemValue.date < currentDate) {
-                    html.push(<List.Item key={itemValue.id}>
+        console.log("CurrentDate: " + currentDate);
+
+
+        let bookingRows: any[] = []
+        let pastBookingsMap = new Map<Date,Booking[]>();
+        sortedBookingsMap.forEach((value,key) => {
+            console.log("dateofBOok")
+            console.log(value[0].date)
+            pastBookingsMap.set(key, value.filter((bookingItem) => {
+            //    const bookingdate = new Date(bookingItem.date)
+            const bookingDate = moment(bookingItem.date).subtract(1,"hours")
+               console.log(bookingDate)
+               return bookingDate.toDate() < currentDate
+           }))
+        })
+        pastBookingsMap.forEach((value , key) => {
+            if (value.length !== 0) {            
+                bookingRows.push(<h2> {key} </h2>)
+
+                value.map((itemValue) => {
+                    bookingRows.push(<List.Item key={itemValue.id}>
                         <BookedRow booking={itemValue} fetchBookings={() => fetchBookings} userid={userid} />
                     </List.Item>)
-                }
-            })
+
+                })
+            }
         })
-        return html
+        return bookingRows
     }
 
 
@@ -132,7 +152,7 @@ export const BookingOfUserPage = () => {
             <Tabs defaultActiveKey="1" onChange={callback}>
                 <TabPane tab="Upcoming" key="1">
                     <List>
-                        {showAllRows()}
+                        {showUpcoming()}
                     </List>
                 </TabPane>
                 <TabPane tab="Past" key="2">
