@@ -7,6 +7,7 @@ import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router
 import { authContext, AuthProvider } from './contexts/AuthenticationContext';
 import { CalendarPage } from './pages/Booking/CalendarPage';
 import { AvailabilityPage } from './pages/Availability/AvailabilityPage';
+import { BookingOfUserPage } from './pages/BookingsOfUser/BookingsOfUserPage';
 import { SettingsPage } from './pages/Settings/SettingsPage'
 
 export const BasePage = () => {
@@ -69,6 +70,7 @@ const App: FC = () => {
           <UnauthenticatedRoute exact path="/booking" component={CalendarPage} />
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
           {/* <Route exact path = "user/:userid/booking/offer/:offername/:minute"/> */}
+          <AuthenticatedRoute exact path="/meetings" component={BookingOfUserPage} />
           <AuthenticatedRoute exact path="/Availability" component={AvailabilityPage} />
           <AuthenticatedRoute exact path="/settings" component={SettingsPage} />
           <Route path="/" component={BasePage} />
