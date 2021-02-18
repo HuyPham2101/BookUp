@@ -3,9 +3,9 @@ import './App.less';
 import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
+import { CalendarPage } from './pages/Booking/CalendarPage';
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { authContext, AuthProvider } from './contexts/AuthenticationContext';
-import { CalendarPage } from './pages/Booking/CalendarPage';
 import { AvailabilityPage } from './pages/Availability/AvailabilityPage';
 import { BookingOfUserPage } from './pages/BookingsOfUser/BookingsOfUserPage';
 import { SettingsPage } from './pages/Settings/SettingsPage'
@@ -17,6 +17,13 @@ export const BasePage = () => {
   } else {
     return <Redirect to="/login" />;
   }
+};
+
+const PublicRoute: React.FC<RouteProps> = ({
+  children,
+  ...routeProps
+}) => {
+  return <Route {...routeProps} />;
 };
 
 const UnauthenticatedRoute: React.FC<RouteProps> = ({
@@ -65,9 +72,9 @@ const App: FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <Switch>
+          <PublicRoute path="/booking/:eventTypeId" component={CalendarPage} />
           <UnauthenticatedRoute exact path="/login" component={LoginPage} />
           <UnauthenticatedRoute exact path="/register" component={SignUp} />
-          <UnauthenticatedRoute exact path="/booking" component={CalendarPage} />
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />
           {/* <Route exact path = "user/:userid/booking/offer/:offername/:minute"/> */}
           <AuthenticatedRoute exact path="/meetings" component={BookingOfUserPage} />
