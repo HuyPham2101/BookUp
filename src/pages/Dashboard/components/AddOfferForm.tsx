@@ -63,6 +63,7 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
             />
             <Form.Item>
                 <InputNumber
+                    data-cy="Select-Minute-Testing"
                     name="duration"
                     min={1}
                     max={59}

@@ -36,6 +36,7 @@ export const DashboardPage = () => {
       <FilterInput offers={offers} setFilteredOffer={setFilteredOffer} setFiltering={setFiltering} />
       <div style={{ backgroundColor: "#fff", padding: "2em" }}>
         <Card
+          data-cy="Offer-button-Testing"
           onClick={() => (setAddOfferVisible(true))}
           hoverable={true}
           style={{ display: 'inline-block', width: 300, height: 278, margin: 8, textAlign: 'center', boxShadow: "5px 8px 8px #c4c4c4" }}
