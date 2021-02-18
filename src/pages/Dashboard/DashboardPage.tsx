@@ -1,7 +1,7 @@
 import { Card } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { authContext } from '../../contexts/AuthenticationContext';
-import { Modal } from './components/Modal'
+import { Modal } from '../../components/Modal'
 import { AddOfferForm } from "./components/AddOfferForm"
 import { Offer } from "../../components/EntityTypes"
 import { OfferItem } from "./components/OfferItem"
