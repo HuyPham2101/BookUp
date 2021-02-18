@@ -81,7 +81,7 @@ export const DayRow: React.FC<DayItemProps> = ({
                     {day.day}
                 </div>
                 {day.active &&
-                    <RangePicker allowClear={false} defaultValue={[startTimeValue, endTimeValue]} format="HH:mm" showSecond={false} showNow={false} style={{ marginLeft: '50px' }} onChange={timeChanges} />
+                    <RangePicker allowClear={false} inputReadOnly= {true} minuteStep = {15} defaultValue={[startTimeValue, endTimeValue]} format="HH:mm" showSecond={false} showNow={false} style={{ marginLeft: '50px' }} onChange={timeChanges} />
                 }
                 {!day.active && (
                     <p>Unavailable!</p>
