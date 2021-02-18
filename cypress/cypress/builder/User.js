@@ -6,3 +6,10 @@ export const userBuilder = () =>
     userName: fake(f => f.name.firstName()),
     password: fake(f => f.internet.password())
   });
+
+  export const testUserBuilder = () =>
+  build("User").fields({
+    email: fake(f => f.internet.email()),
+    userName: fake(f => f.name.firstName()),
+    password: fake(f => f.internet.password())
+  });
