@@ -3,12 +3,22 @@ describe("Availability" , () => {
         cy.loginNewUser({}).then((user) => {
             cy.visit("/Availability");
             cy.screenshot();
-            cy.get('[data-cy=Offer-button-Testing]').click();
-            cy.findByLabelText(/Titel/i).type("testingTitle")
-            cy.findByLabelText(/Description/i).type("TestingDescription")
-            cy.get('[data-cy=Select-Minute-Testing]').clear().type(15)
-            cy.findByText("Submit").click();
-            cy.findByText("Copy Link").should('exist')
+            // first Item Test
+            cy.findAllByPlaceholderText(/Start Time/i).first().clear({force:true}).type('12:12')
+            cy.contains('Ok').click();
+            cy.findAllByPlaceholderText(/End Time/i).first().clear({force:true}).type('18:12')
+            cy.contains('Ok').click();
+            cy.findAllByPlaceholderText(/Start Time/i).first().should('have.value', '12:12')
+            cy.findAllByPlaceholderText(/End Time/i).first().should('have.value', '18:12')
+
+            //Last Item Test
+            cy.findAllByPlaceholderText(/Start Time/i).last().clear({force:true}).type('12:12')
+            cy.get('button').last().click( );
+            cy.findAllByPlaceholderText(/End Time/i).last().clear({force:true}).type('18:12')
+            cy.get('button').last().click( );
+            cy.findAllByPlaceholderText(/Start Time/i).last().should('have.value', '12:12')
+            cy.findAllByPlaceholderText(/End Time/i).last().should('have.value', '18:12')
+            cy.screenshot();
         })
     })
 })
