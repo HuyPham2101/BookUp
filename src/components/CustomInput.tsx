@@ -49,7 +49,7 @@ const InputContainer = styled.div`
     }
 `;
 
-export const Input = ({
+export const CustomInput = ({
     label,
     ...props
 }: React.ComponentPropsWithoutRef<"input"> & {
