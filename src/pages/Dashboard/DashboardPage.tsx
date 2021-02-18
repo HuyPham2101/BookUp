@@ -30,7 +30,6 @@ export const DashboardPage = () => {
     fetchOffers();
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-
   return (
     <PageLayout index={1}>
       <FilterInput offers={offers} setFilteredOffer={setFilteredOffer} setFiltering={setFiltering} />
@@ -59,7 +58,7 @@ export const DashboardPage = () => {
         )}
       </div>
       {addOfferVisible && (
-        <Modal onCancel={() => { setAddOfferVisible(false) }}>
+        <Modal title={"Add Offer"} onCancel={() => { setAddOfferVisible(false) }}>
           <AddOfferForm afterSubmit={() => {
             setAddOfferVisible(false);
             fetchOffers();

@@ -21,7 +21,9 @@ export const SettingsPage = () => {
         if (userRequest.status === 200) {
             const userJSON = await userRequest.json();
             setUser(userJSON.data);
-            setImgUrl(`/api/profilePhoto/${userJSON.data.imageId.url}`)
+            if (userJSON.data.imageId.url) {
+                setImgUrl(`/api/profilePhoto/${userJSON.data.imageId.url}`)
+            }
         }
     }
 
