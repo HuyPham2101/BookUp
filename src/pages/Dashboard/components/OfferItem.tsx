@@ -8,7 +8,7 @@ export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({
     const token = useContext(authContext);
 
     const copyLink = () => {
-        navigator.clipboard.writeText(offer.link);
+        navigator.clipboard.writeText(`http://localhost:3000/booking/${offer.id}`);
         message.success("Link copied!", 1.5);
     }
 
