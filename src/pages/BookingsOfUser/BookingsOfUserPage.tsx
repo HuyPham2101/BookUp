@@ -1,9 +1,9 @@
 import { PageLayout } from "../../components/PageLayout"
-import { List, Tabs } from 'antd';
+import { Button, List, Tabs } from 'antd';
 import React, { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { authContext } from "../../contexts/AuthenticationContext";
-import { BookedRow, Booking } from "./components/BookedRow";
+import { Booking } from "../../components/EntityTypes";
 const { TabPane } = Tabs;
 
 
@@ -12,27 +12,27 @@ export type BookingDateFiltered = {
     booking: Booking[],
 }
 
-
 export const BookingOfUserPage = () => {
     const token = useContext(authContext);
-    const [userid, setUserId] = useState<number>(0)
-    const [sortedBookingsMap, setSortedBookingsMap] = useState<Map<Date, Booking[]>>(new Map())
+    const [groupedBookingsMap, setGroupedBookingsMap] = useState<Map<Date, Booking[]>>(new Map())
 
-    const getSortedBookingsByDate = (arr: Booking[]) => {
-        let sortedBookings = new Map();
+    const getBookingsGroupedByDate = (arr: Booking[]) => {
+        let groupedBookings = new Map();
         arr.forEach((item: Booking) => {
-            let tempDate = new Date(item.date)
 
-            if (sortedBookings.has(tempDate.toDateString())) {
-                sortedBookings.get(tempDate.toDateString()).push(item)
+            console.log("item.date: ", item.date);
+            console.log("new date: ", new Date());
+
+            if (groupedBookings.has(item.date.toDateString())) {
+                groupedBookings.get(item.date.toDateString()).push(item)
             }
             else {
                 let tempArr = []
                 tempArr.push(item)
-                sortedBookings.set(tempDate.toDateString(), tempArr)
+                groupedBookings.set(item.date.toDateString(), tempArr)
             }
         })
-        return sortedBookings;
+        return groupedBookings;
     }
 
     const fetchBookings = async function () {
@@ -41,14 +41,27 @@ export const BookingOfUserPage = () => {
         if (decode != null) {
             tempUserId = decode.id;
         }
-        setUserId(tempUserId)
         const allBookingRequest = await fetch("/api/booking/all/" + tempUserId, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         });
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
-            setSortedBookingsMap(getSortedBookingsByDate(allBookingRequestJson.data))
+            let bookings: Booking[] = allBookingRequestJson.data;
+            for (let booking of bookings) {
+                booking.date = new Date(booking.date);
+                booking.date.setHours(booking.date.getHours() - 1);
+            }
+            bookings.sort((booking1: Booking, booking2: Booking) => {
+                if (booking1.date < booking2.date) {
+                    return -1;
+                }
+                if (booking1.date > booking2.date) {
+                    return 1;
+                }
+                return 0;
+            });
+            setGroupedBookingsMap(getBookingsGroupedByDate(bookings));
         }
     }
 
@@ -60,80 +73,107 @@ export const BookingOfUserPage = () => {
         fetchBookings();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    /* const parseDate = (input: any) => {
-        let parts = input.match(/(\d+)/g);
-        // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
-        return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
+    const getBookingRowFormattedJson = (booking: Booking) => {
+        let endTime = new Date(booking.date);
+        endTime.setMinutes(endTime.getMinutes() + booking.eventType.duration);
 
-    } */
+        const time = booking.date.toLocaleTimeString("de-DE").substring(0, 5) + " - " + endTime.toLocaleTimeString("de-De").substring(0, 5);
+        const invitee = booking.invitee.firstName + " " + booking.invitee.lastName;
 
-    const showAllRows = () => {
-        let bookingRows: any[] = []
-        sortedBookingsMap.forEach((value, key) => {
-            bookingRows.push(<h2> {key} </h2>)
-            value.map((itemValue) => (
-                bookingRows.push(<List.Item key={itemValue.id}>
-                    <BookedRow booking={itemValue} fetchBookings={fetchBookings} userid={userid} />
-                </List.Item>)
-            ))
-        })
-        return bookingRows;
+        const bookingRowJson =
+        {
+            "id": booking.id,
+            "time": time,
+            "title": booking.eventType.title,
+            "description": booking.eventType.description,
+            "invitee": invitee
+        }
+
+        return bookingRowJson;
+    }
+
+    const deleteBooking = async (bookingId : number) => {
+        await fetch(`/api/booking/${bookingId}`, {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"}
+        });
+        fetchBookings();
+    }
+
+    const generateBookingList = (bookingMap: Map<Date, Booking[]>) => {
+        // const [detailModal, setDetailModal] = useState<boolean>(false);
+        let formattedBookings: any[] = [];
+        let jsxElementResultList : JSX.Element[] = [];
+        bookingMap.forEach((bookings, date) => {
+            if(bookings.length !== 0){
+                for (let booking of bookings) {
+                    formattedBookings.push(getBookingRowFormattedJson(booking))
+                }
+                jsxElementResultList.push(
+                    <List
+                    //  style = {{borderColor: "black", borderInlineColor: "black"}}
+                    size="default"
+                    header={date}
+                    footer={" "}
+                    bordered
+                    dataSource={formattedBookings}
+                    renderItem={item =>
+                        <List.Item>
+                            {/* {detailModal && (
+                                <Modal title={item.title} onCancel={() => {setDetailModal(false);}}></Modal>
+                            )} */}
+                            <h4>{item.time}</h4>
+                            <List.Item.Meta title={item.title} style={{ fontWeight: "bold" }} />
+                            <List.Item.Meta description={item.description} />
+                            {item.invitee}
+                            <Button
+                             danger
+                             onClick={() => {deleteBooking(item.id)}}
+                             style={{float: "right"}}
+                            >
+                                Delete
+                            </Button>
+                        </List.Item>} />
+                );
+                formattedBookings = [];
+            }
+        });
+
+        return jsxElementResultList;
     }
 
     const showUpcoming = () => {
         let currentDate = new Date();
-        let bookingRows: any[] = []
+
         let upcomingBookingsMap = new Map<Date, Booking[]>();
-        sortedBookingsMap.forEach((value, key) => {
-            upcomingBookingsMap.set(key, value.filter((bookingItem) => {
+        groupedBookingsMap.forEach((bookings, date) => {
+            upcomingBookingsMap.set(date, bookings.filter((bookingItem) => {
                 //    const bookingdate = new Date(bookingItem.date)
                 const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                console.log(bookingDate)
                 return bookingDate.toDate() >= currentDate
             }))
         })
-        upcomingBookingsMap.forEach((value, key) => {
-            if (value.length !== 0) {
-                bookingRows.push(<h2> {key} </h2>)
-
-                value.map((itemValue) => {
-                    bookingRows.push(<List.Item key={itemValue.id}>
-                        <BookedRow booking={itemValue} fetchBookings={() => fetchBookings} userid={userid} />
-                    </List.Item>)
-
-                })
-            }
-        })
-        return bookingRows
+  
+        return  generateBookingList(upcomingBookingsMap);
     }
 
     const showPast = () => {
         let currentDate = new Date();
 
-
-        let bookingRows: any[] = []
+        // let bookingRows: any[] = []
         let pastBookingsMap = new Map<Date, Booking[]>();
-        sortedBookingsMap.forEach((value, key) => {
-            pastBookingsMap.set(key, value.filter((bookingItem) => {
+        groupedBookingsMap.forEach((bookings, date) => {
+            pastBookingsMap.set(date, bookings.filter((bookingItem) => {
                 //    const bookingdate = new Date(bookingItem.date)
                 const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                console.log(bookingDate)
                 return bookingDate.toDate() < currentDate
             }))
         })
-        pastBookingsMap.forEach((value, key) => {
-            if (value.length !== 0) {
-                bookingRows.push(<h2> {key} </h2>)
-
-                value.map((itemValue) => {
-                    bookingRows.push(<List.Item key={itemValue.id}>
-                        <BookedRow booking={itemValue} fetchBookings={() => fetchBookings} userid={userid} />
-                    </List.Item>)
-
-                })
-            }
-        })
-        return bookingRows
-    }
-
+    
+        return generateBookingList(pastBookingsMap);
+    } 
 
     return (
         <PageLayout index={3}>
@@ -150,9 +190,7 @@ export const BookingOfUserPage = () => {
                     </List>
                 </TabPane>
                 <TabPane tab="All" key="3">
-                    <List>
-                        {showAllRows()}
-                    </List>
+                    {generateBookingList(groupedBookingsMap)}
                 </TabPane>
             </Tabs>
         </PageLayout>

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useContext, useState } from "react";
-import { Input } from "../../../components/Input"
-import { InputNumber, Form, Button } from "antd"
+import { CustomInput } from "../../../components/CustomInput"
+import { Form, Button, Slider, InputNumber, Row, Col } from "antd"
 import { authContext } from "../../../contexts/AuthenticationContext";
 
 export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit }) => {
@@ -27,7 +27,7 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
             title: offer.title,
             description: offer.description,
             duration: offer.duration,
-            link: `http://localhost:3000/api/user/${userId}/booking/offer/${getTitleWithoutSpace(offer.title)}/${offer.duration}`,
+            link: "",
         }
         console.log(tempOffer);
         await fetch(`/api/user/${userId}/eventType`, {
@@ -39,28 +39,25 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
         afterSubmit();
     }
 
-    const getTitleWithoutSpace = (title: string) => {
-        return title.split(' ').join('_');
-    }
-
     return (
         <Form
             onFinish={onFinish}
         >
-            <Input
+            <CustomInput
                 type="text"
                 name="title"
                 label="Titel"
                 onChange={onChange}
                 required
             />
-            <Input
+            <CustomInput
                 type="text"
                 name="description"
                 label="Description"
                 onChange={onChange}
                 required
             />
+<<<<<<< HEAD
             <Form.Item>
                 <InputNumber
                     data-cy="Select-Minute-Testing"
@@ -70,6 +67,33 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
                     defaultValue={15}
                     onChange={setMinutes}
                 />
+=======
+            <Form.Item
+                name="duration"
+                label="Duration"
+            >
+                <Row>
+                    <Col span={16}>
+                        <Slider
+                            min={10}
+                            max={90}
+                            onChange={setMinutes}
+                            step={5}
+                            value={offer.duration}
+                        />
+                    </Col>
+                    <Col span={4}>
+                        <InputNumber
+                            name="duration"
+                            min={10}
+                            max={90}
+                            value={offer.duration}
+                            step={5}
+                            onChange={setMinutes}
+                        />
+                    </Col>
+                </Row>
+>>>>>>> master
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">

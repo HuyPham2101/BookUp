@@ -1,7 +1,7 @@
 import { Card } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { authContext } from '../../contexts/AuthenticationContext';
-import { Modal } from './components/Modal'
+import { Modal } from '../../components/Modal'
 import { AddOfferForm } from "./components/AddOfferForm"
 import { Offer } from "../../components/EntityTypes"
 import { OfferItem } from "./components/OfferItem"
@@ -29,7 +29,6 @@ export const DashboardPage = () => {
   useEffect(() => {
     fetchOffers();
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
 
   return (
     <PageLayout index={1}>
@@ -60,7 +59,7 @@ export const DashboardPage = () => {
         )}
       </div>
       {addOfferVisible && (
-        <Modal onCancel={() => { setAddOfferVisible(false) }}>
+        <Modal title={"Add Offer"} onCancel={() => { setAddOfferVisible(false) }}>
           <AddOfferForm afterSubmit={() => {
             setAddOfferVisible(false);
             fetchOffers();

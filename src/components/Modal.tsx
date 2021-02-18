@@ -51,7 +51,7 @@ background-color: #dcdcdc;
 text-align:center;
 `;
 
-export const Modal: React.FC<{ onCancel: () => void }> = ({ children, onCancel }) => {
+export const Modal: React.FC<{ onCancel: () => void, title: string }> = ({ children, onCancel, title }) => {
     const modalRoot = document.getElementById("modal-root");
     if (modalRoot === null) {
         return <></>;
@@ -61,7 +61,7 @@ export const Modal: React.FC<{ onCancel: () => void }> = ({ children, onCancel }
                 <ModalMaskHolder>
                     <ModalMask>
                         <ModalHeader>
-                            <ModalTitle>Add Offer</ModalTitle>
+                            <ModalTitle>{title}</ModalTitle>
                             <ModalCloseButton onClick={onCancel}>X</ModalCloseButton>
                         </ModalHeader>
                         {children}
