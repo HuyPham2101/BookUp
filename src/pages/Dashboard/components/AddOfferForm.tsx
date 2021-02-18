@@ -57,17 +57,6 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
                 onChange={onChange}
                 required
             />
-<<<<<<< HEAD
-            <Form.Item>
-                <InputNumber
-                    data-cy="Select-Minute-Testing"
-                    name="duration"
-                    min={1}
-                    max={59}
-                    defaultValue={15}
-                    onChange={setMinutes}
-                />
-=======
             <Form.Item
                 name="duration"
                 label="Duration"
@@ -93,7 +82,6 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
                         />
                     </Col>
                 </Row>
->>>>>>> master
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">
