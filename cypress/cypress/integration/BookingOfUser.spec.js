@@ -20,6 +20,8 @@ describe("BookingsOfUser" , () => {
             cy.screenshot();
 
         // then copy link to redirect to booking page // Todo
+
+        //Create a booking then redirect to our bookingofUserPage
         })
     })
 })
