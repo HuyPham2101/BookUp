@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useContext, useState } from "react";
-import { Input } from "../../../components/Input"
-import { InputNumber, Form, Button } from "antd"
+import { CustomInput } from "../../../components/CustomInput"
+import { Form, Button, Slider, InputNumber, Row, Col } from "antd"
 import { authContext } from "../../../contexts/AuthenticationContext";
 
 export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit }) => {
@@ -47,28 +47,45 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
         <Form
             onFinish={onFinish}
         >
-            <Input
+            <CustomInput
                 type="text"
                 name="title"
                 label="Titel"
                 onChange={onChange}
                 required
             />
-            <Input
+            <CustomInput
                 type="text"
                 name="description"
                 label="Description"
                 onChange={onChange}
                 required
             />
-            <Form.Item>
-                <InputNumber
-                    name="duration"
-                    min={1}
-                    max={59}
-                    defaultValue={15}
-                    onChange={setMinutes}
-                />
+            <Form.Item
+                name="duration"
+                label="Duration"
+            >
+                <Row>
+                    <Col span={16}>
+                        <Slider
+                            min={10}
+                            max={90}
+                            onChange={setMinutes}
+                            step={5}
+                            value={offer.duration}
+                        />
+                    </Col>
+                    <Col span={4}>
+                        <InputNumber
+                            name="duration"
+                            min={10}
+                            max={90}
+                            value={offer.duration}
+                            step={5}
+                            onChange={setMinutes}
+                        />
+                    </Col>
+                </Row>
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">

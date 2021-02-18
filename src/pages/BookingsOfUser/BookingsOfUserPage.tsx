@@ -142,7 +142,7 @@ export const BookingOfUserPage = () => {
         return jsxElementResultList;
     }
 
-     const showUpcoming = () => {
+    const showUpcoming = () => {
         let currentDate = new Date();
 
         let upcomingBookingsMap = new Map<Date, Booking[]>();

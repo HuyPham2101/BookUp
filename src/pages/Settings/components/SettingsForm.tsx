@@ -81,7 +81,7 @@ export const SettingsForm: React.FC<{ fetchUser: () => void, user: User | undefi
                 <Form.Item label="Change password">
                     <Space direction="vertical">
                         <Input.Password id="passwordInput" name="password" value={changedUserData?.password} onChange={fieldDidChange} placeholder="new password" />
-                        <Input.Password id="repeatPassword" name="repeatesPassword" value={changedUserData?.repeatedPassword} onChange={fieldDidChange} placeholder="repeat password" />
+                        <Input.Password id="repeatPassword" name="repeatedPassword" value={changedUserData?.repeatedPassword} onChange={fieldDidChange} placeholder="repeat password" />
                     </Space>
                 </Form.Item>
                 <Form.Item>
