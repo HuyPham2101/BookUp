@@ -10,20 +10,20 @@ import { DayAvailability, DayRow } from './components/DayRow';
 
 export const AvailabilityPage = () => {
     const { actions: { logout } } = useContext(authContext)
-    const token = useContext(authContext);
+    const {token, actions} = useContext(authContext);
     const [daysAvailability, setDaysAvailability] = useState<DayAvailability[]>([]);
     const [userid, setUserId] = useState<number>(0)
 
     const fetchAvailability = async function () {
         let tempUserId = 0;
-        const decode = token.actions.getTokenData();
+        const decode = actions.getTokenData();
         if (decode != null) {
             tempUserId = decode.id;
         }
         setUserId(tempUserId)
         const availabilityRequest = await fetch("/api/availability/" + tempUserId, {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" , Authorization : token!},
         });
         if (availabilityRequest.status === 200) {
             const availabilityJSON = await availabilityRequest.json();

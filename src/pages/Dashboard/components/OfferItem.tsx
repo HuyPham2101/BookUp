@@ -5,8 +5,7 @@ import { useContext } from "react";
 import { authContext } from "../../../contexts/AuthenticationContext";
 
 export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({ offer, fetchOffers }) => {
-    const token = useContext(authContext);
-
+    const {token, actions} = useContext(authContext);
     const copyLink = () => {
         navigator.clipboard.writeText(`http://localhost:3000/booking/${offer.id}`);
         message.success("Link copied!", 1.5);
@@ -26,10 +25,12 @@ export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({
     //     return ti
     // }
     const deleteOffer = async () => {
-        const userId = token.actions.getTokenData()?.id;
+        const userId = actions.getTokenData()?.id;
         await fetch(`/api/user/${userId}/eventType/${offer.id}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" , Authorization : token!},
+
+            
         })
         fetchOffers();
     }
