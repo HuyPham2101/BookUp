@@ -1,4 +1,3 @@
-import './style.less';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -15,6 +14,7 @@ import {
 } from "react-router-dom";
 
 import logo from '../../logo.svg';
+import './style.css';
 
 export interface TimeAvailable {
   time: string;
@@ -334,7 +334,7 @@ export const CalendarPage = () => {
   );
 
   return (
-    <div>
+    <div className="calendar-page">
       { currentStep < 2 ? IndexComponent : null}
       { currentStep === 2 ? RegisterComponent : null}
       { currentStep === 3 ? ConfirmComponent : null}
