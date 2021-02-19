@@ -79,6 +79,21 @@ password: test
 
 ## Screenshots
 
+Login
+![alt](images/Login.PNG)
+
+Sign Up
+![alt](images/SignUp.PNG)
+
+Dashboard
+![alt](images/Dashboard.PNG)
+
+Dashboard Add Offer
+![alt](images/DashboardAddOffer.PNG)
+
+Dashboard with Offer
+![alt](images/DashboardOffer.PNG)
+
 ## Credits
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 This project is inspired by [Calendly](https://calendly.com/de).
