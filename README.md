@@ -1,6 +1,6 @@
 # Book-Up 
 
-###Motivation 
+## Motivation 
 We all know the problematic back and forth when trying to make appointments.
 To solve this problem, we created Book-Up as a tool for scheduling meetings, appointments and events. 
 With Book-Up all you have to do is:
@@ -11,7 +11,7 @@ With Book-Up all you have to do is:
 The person that opens the link will see the offer with your available time in a fancy calendar. He/She/It just has to select a timeslot for the appointment and submit the choice. 
 
 
-### Installation 
+## Installation 
 
 In order to make the whole application work you have to clone [the backend](https://code.fbi.h-da.de/bookup/bookup-backend.git) and this project into the same directory:
 ```bash
@@ -29,7 +29,7 @@ Finally, open a terminal for `ExampleDirectory` and execute
 docker-compose up
 ```
 
-### Features
+## Features
 
 As a **registered User** you can:
 
@@ -71,13 +71,13 @@ As an **Invitee**, after you opened the Link, you can:
 
 
 
-### Screenshots
+## Screenshots
 
-### Credits
+## Credits
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 This project is inspired by [Calendly](https://calendly.com/de).
 
-### License
+## License
 MIT License
 
 Copyright (c) Facebook, Inc. and its affiliates.
