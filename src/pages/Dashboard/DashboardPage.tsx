@@ -8,6 +8,7 @@ import { OfferItem } from "./components/OfferItem"
 import { PlusCircleTwoTone } from '@ant-design/icons';
 import { FilterInput } from "./components/FilterInput"
 import { PageLayout } from '../../components/PageLayout';
+import { EditOfferForm } from "./components/EditOfferForm"
 
 export const DashboardPage = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
@@ -15,6 +16,7 @@ export const DashboardPage = () => {
   const [addOfferVisible, setAddOfferVisible] = useState(false);
   const [filteredOffers, setFilteredOffer] = useState<Offer[]>();
   const [filtering, setFiltering] = useState<boolean>(false);
+  const [editOffer, setEditOffer] = useState<Offer | null>(null);
 
   const fetchOffers = async function () {
     const userId = token.actions.getTokenData()?.id;
@@ -45,14 +47,14 @@ export const DashboardPage = () => {
         </Card>
         {!filtering && (
           offers.map(offer => (
-            <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
+            <OfferItem clickHandler={() => setEditOffer(offer)} key={offer.id} offer={offer} fetchOffers={() => {
               fetchOffers();
             }} />
           ))
         )}
         {filtering && (
           filteredOffers?.map(offer => (
-            <OfferItem key={offer.id} offer={offer} fetchOffers={() => {
+            <OfferItem clickHandler={() => setEditOffer(offer)} key={offer.id} offer={offer} fetchOffers={() => {
               fetchOffers();
             }} />
           ))
@@ -62,6 +64,15 @@ export const DashboardPage = () => {
         <Modal title={"Add Offer"} onCancel={() => { setAddOfferVisible(false) }}>
           <AddOfferForm afterSubmit={() => {
             setAddOfferVisible(false);
+            fetchOffers();
+          }}
+          />
+        </Modal>
+      )}
+      {editOffer && (
+        <Modal title={"Edit Offer"} onCancel={() => { setEditOffer(null) }}>
+          <EditOfferForm clickedOffer={editOffer} afterSubmit={() => {
+            setEditOffer(null);
             fetchOffers();
           }}
           />
