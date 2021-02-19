@@ -186,8 +186,22 @@ export const CalendarPage = () => {
     }
   }
 
-  const bookEvent = async () => {
-    const form = document.getElementById('register-form') as HTMLFormElement;
+    const buildDate = () =>  {
+      if(
+        selectedDate !== undefined &&
+        selectedTime !== undefined &&
+        selectedTime.hours !== undefined &&
+        selectedTime.minutes !== undefined)
+      {
+        const date = new Date(selectedDate);
+
+        date.setHours(selectedTime.hours);   
+        // date.setHours(date.getHours() + 1);
+        date.setMinutes(selectedTime.minutes);
+        console.log(date)
+        return date;
+      }
+    }
 
     if (!form.checkValidity()) {
       return;
