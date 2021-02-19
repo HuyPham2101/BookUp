@@ -1,17 +1,10 @@
 describe("BookingsOfUser" , () => {
-    it("can render Meeting Page ", ()=> {
-        cy.loginNewUser({}).then((user) => {
-            cy.visit("/meetings");
-            cy.findByText(/Upcoming/i).should('exist');
-            cy.findByText(/Past/i).should('exist');
-            cy.findByText(/All/i).should('exist');
-            cy.screenshot();
-        })
-    })
-    it("can see Upcoming Meetings", ()=> {
+
+    
+    it("can add Bookings", ()=> {
         cy.loginNewUser({}).then((user) => {
         //first add an EventType
-        cy.visit("/dashboard")
+            cy.visit("/dashboard")
             cy.get('[data-cy=Offer-button-Testing]').click();
             cy.findByLabelText(/Titel/i).type("testingTitle")
             cy.findByLabelText(/Description/i).type("TestingDescription")
@@ -19,8 +12,6 @@ describe("BookingsOfUser" , () => {
             cy.findByText("Submit").click();
 
             cy.findByText("Copy Link").click();
-            // because of the clipboard bug
-            alert("Copied");
             // get link from CLipboard then isolate the id then fetch to the visit test
             cy.task('getClipboard').then(($clip) => {
                 const url = $clip;
@@ -30,24 +21,35 @@ describe("BookingsOfUser" , () => {
             });
 
             cy.findByText(/28/i).click();
-            cy.contains('10:30am').click();
+            cy.contains('10:00am').click();
             cy.findByText(/Confirm/i).click();
-            //Create a booking then redirect to our bookingofUserPage
-            cy.findByLabelText(/Firstname/i).type("testInvitee33")
-            cy.findByLabelText(/Lastname/i).type("testInviteeLastname33")
+        //Create a booking then redirect to our bookingofUserPage
+            cy.findByLabelText(/Firstname/i).type("testInvitee")
+            cy.findByLabelText(/Lastname/i).type("testInviteeLastname")
             cy.findByLabelText(/Email/i).type("Test@gmail.com")
             cy.findByText(/Schedule Event/i).click();
             cy.findByText(/Confirmed/i).should('exist')
             cy.screenshot();
-            cy.visit('/meetings')
-            cy.findByText(/10:30/i).should('exist')
-            cy.findByText(/10:45/i).should('exist')
-            cy.findByText(/testInvitee/i).should('exist')
-            cy.findByText(/TestingDescription/i).should('exist')
-            cy.findByText(/testInvitee/i).should('exist')
-            cy.findByText(/testInviteeLastname/i).should('exist')
-            
+        })
+    })
 
+    it("can redirect to Availability Page", ()=> {
+        cy.loginNewUser({}).then((user) => {
+            cy.visit("/dashboard");
+            cy.screenshot();
+            cy.findByText(/Availability/i).click();
+            cy.url().should("contain", "/Availability");
+            cy.screenshot();
+        })
+    })
+
+    it("can redirect to DashBoard", ()=> {
+        cy.loginNewUser({}).then((user) => {
+            cy.visit("/Availability");
+            cy.screenshot();
+            cy.findByText(/Dashboard/i).click();
+            cy.url().should("contain", "/dashboard");
+            cy.screenshot();
         })
     })
 })

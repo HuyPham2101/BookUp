@@ -64,6 +64,7 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.7"
+    "@types/styled-components": "^5.1.7",
+    "clipboardy": "^2.3.0"
   }
 }

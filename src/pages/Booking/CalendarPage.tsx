@@ -167,7 +167,7 @@ export const CalendarPage = () => {
 
         date.setHours(selectedTime.hours);
         date.setMinutes(selectedTime.minutes);
-        
+        console.log(date)
         return date;
       }
     }
