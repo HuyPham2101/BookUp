@@ -13,23 +13,12 @@ export type User = {
     userName: string;
     email: string;
     password: string;
-    imageId: ProfilePhoto;
+    image: ProfilePhoto;
 }
 
 export type ProfilePhoto = {
     id: number;
     url: string;
-}
-
-export type EventType = {
-    id: number;
-    title: string;
-    description: string;
-    duration: number;
-    link: string;
-    createdAt: Date,
-    updatedAt: Date,
-    deletedAt: Date,
 }
 
 export type Invitee = {
@@ -53,7 +42,7 @@ export type Booking = {
     updatedAt: Date,
     deletedAt: Date,
     date: Date,
-    eventType: EventType,
+    offer: Offer,
     status: Status,
     invitee: Invitee
 }

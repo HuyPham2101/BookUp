@@ -18,7 +18,7 @@ export const DashboardPage = () => {
 
   const fetchOffers = async function () {
     const userId = token.actions.getTokenData()?.id;
-    const offerRequest = await fetch(`/api/user/${userId}/eventTypes`, {
+    const offerRequest = await fetch(`/api/user/${userId}/offers`, {
       headers: { 'content-type': "application/json" },
     });
     if (offerRequest.status === 200) {

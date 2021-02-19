@@ -1,4 +1,4 @@
-import { TimeAvailable } from '../pages/Booking/CalendarPage';
+import { TimeAvailable } from '../pages/Calendar/CalendarPage';
 
 interface Props {
   time: TimeAvailable;

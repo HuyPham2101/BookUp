@@ -1,15 +1,11 @@
-import { List, Card, Menu, Breadcrumb } from 'antd';
-import Layout, { Content, Footer, Header } from 'antd/lib/layout/layout';
+import { List, Card } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Copyright } from '../../components/CopyrightComponent';
 import { PageLayout } from '../../components/PageLayout';
 import { authContext } from '../../contexts/AuthenticationContext';
 import { DayAvailability, DayRow } from './components/DayRow';
 
 
 export const AvailabilityPage = () => {
-    const { actions: { logout } } = useContext(authContext)
     const token = useContext(authContext);
     const [daysAvailability, setDaysAvailability] = useState<DayAvailability[]>([]);
     const [userid, setUserId] = useState<number>(0)
@@ -37,12 +33,12 @@ export const AvailabilityPage = () => {
 
 
     return (
-        <PageLayout index = {2}>
+        <PageLayout index={2}>
             <div style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
                 <Card title="Set your weekly Hours" style={{ width: 500 }}>
                     <List>
                         {daysAvailability.map((day) => (
-                                        <List.Item key={day.id}> <DayRow day={day} fetchDays={() => { fetchAvailability() }} userid={userid} /></List.Item>
+                            <List.Item key={day.id}> <DayRow day={day} fetchDays={() => { fetchAvailability() }} userid={userid} /></List.Item>
                         ))}
                     </List>
                 </Card>

@@ -10,24 +10,11 @@ export const OfferItem: React.FC<{ offer: Offer, fetchOffers: () => void }> = ({
     const copyLink = () => {
         navigator.clipboard.writeText(`http://localhost:3000/booking/${offer.id}`);
         message.success("Link copied!", 1.5);
-        // doit();
-        
-        
-        // console.log(navigator.clipboard.readText().then)
     }
 
-    // const doit = async () => {
-    //     let eventId
-    //     const ti = await navigator.clipboard.readText().then(text => {
-    //     eventId = text.split('/')[4]
-    //         return eventId
-    //     });
-    //     console.log(ti)
-    //     return ti
-    // }
     const deleteOffer = async () => {
         const userId = token.actions.getTokenData()?.id;
-        await fetch(`/api/user/${userId}/eventType/${offer.id}`, {
+        await fetch(`/api/user/${userId}/offer/${offer.id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
         })

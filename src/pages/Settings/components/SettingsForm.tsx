@@ -73,15 +73,35 @@ export const SettingsForm: React.FC<{ fetchUser: () => void, user: User | undefi
                 style={{ margin: 10 }}
             >
                 <Form.Item label="Username">
-                    <Input data-cy="userName-Input-Test" id="userNameInput" name="username" value={changedUserData?.username} onChange={fieldDidChange} defaultValue={user.userName} minLength={2} />
+                    <Input
+                        data-cy="userName-Input-Test"
+                        id="userNameInput"
+                        name="username"
+                        value={changedUserData?.username}
+                        onChange={fieldDidChange}
+                        defaultValue={user.userName}
+                        minLength={2}
+                    />
                 </Form.Item>
                 <Form.Item label="E-Mail">
                     <Input defaultValue={user.email} disabled />
                 </Form.Item>
                 <Form.Item label="Change password">
                     <Space direction="vertical">
-                        <Input.Password id="passwordInput" name="password" value={changedUserData?.password} onChange={fieldDidChange} placeholder="new password" />
-                        <Input.Password id="repeatPassword" name="repeatedPassword" value={changedUserData?.repeatedPassword} onChange={fieldDidChange} placeholder="repeat password" />
+                        <Input.Password
+                            id="passwordInput"
+                            name="password"
+                            value={changedUserData?.password}
+                            onChange={fieldDidChange}
+                            placeholder="new password"
+                        />
+                        <Input.Password
+                            id="repeatPassword"
+                            name="repeatedPassword"
+                            value={changedUserData?.repeatedPassword}
+                            onChange={fieldDidChange}
+                            placeholder="repeat password"
+                        />
                     </Space>
                 </Form.Item>
                 <Form.Item>

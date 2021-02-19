@@ -9,7 +9,6 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
         title: "",
         description: "",
         duration: 15,
-        link: ""
     })
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +16,8 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
     }
 
     const setMinutes = (minute: any) => {
-        setOffer({ ...offer, duration: minute })
+        const min = minute;
+        setOffer({ ...offer, duration: min })
     }
 
     const onFinish = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,10 +27,9 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
             title: offer.title,
             description: offer.description,
             duration: offer.duration,
-            link: "",
         }
         console.log(tempOffer);
-        await fetch(`/api/user/${userId}/eventType`, {
+        await fetch(`/api/user/${userId}/offer`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(tempOffer),
@@ -40,9 +39,7 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
     }
 
     return (
-        <Form
-            onFinish={onFinish}
-        >
+        <Form onFinish={onFinish}>
             <CustomInput
                 type="text"
                 name="title"

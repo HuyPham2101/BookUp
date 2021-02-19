@@ -24,10 +24,10 @@ export interface TimeAvailable {
 }
 
 interface URLParams {
-  eventTypeId: string;
+  offerId: string;
 }
 
-interface EventType {
+interface Offer {
   id: number;
   title: string;
   description: string;
@@ -48,19 +48,17 @@ export const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTime, setSelectedTime] = useState<SelectedTime>();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [eventType, setEventType] = useState<EventType>();
+  const [offer, setOffer] = useState<Offer>();
 
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
 
-  const { eventTypeId } = useParams<URLParams>();
+  const { offerId } = useParams<URLParams>();
 
   useEffect(() => {
 
-    fetchEvent();
-
-    // TODO fetchTimes
+    fetchOffer();
 
     const timeResponse = [
       {
@@ -82,15 +80,15 @@ export const CalendarPage = () => {
 
     setTimesAvailable(transformAvailableTime(timeResponse));
 
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchTimeForDate = async (date: Date) => {
-    const fetchTimeData = await fetch(`/api/booking/${eventTypeId}?date=${date.toUTCString()}`, {
+    const fetchTimeData = await fetch(`/api/booking/${offerId}?date=${date.toUTCString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(eventType => eventType.json());
+    }).then(offer => offer.json());
 
     console.log(fetchTimeData);
 
@@ -174,13 +172,13 @@ export const CalendarPage = () => {
 
   const buildDateAddDuration = () => {
     if (
-      eventType !== undefined &&
-      eventType.duration !== undefined &&
+      offer !== undefined &&
+      offer.duration !== undefined &&
       selectedDate !== undefined &&
       selectedTime !== undefined &&
       selectedTime.hours !== undefined &&
       selectedTime.minutes !== undefined) {
-      const date = moment(buildDate()).add(eventType.duration, 'm').toDate();
+      const date = moment(buildDate()).add(offer.duration, 'm').toDate();
 
       return date;
     }
@@ -203,7 +201,7 @@ export const CalendarPage = () => {
           lastName,
           email,
         },
-        eventType,
+        offer: offer,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -213,15 +211,15 @@ export const CalendarPage = () => {
     setCurrentStep(3);
   };
 
-  const fetchEvent = async () => {
-    const eventTypeData = await fetch(`/api/eventType/${eventTypeId}`, {
+  const fetchOffer = async () => {
+    const offerData = await fetch(`/api/offer/${offerId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(eventType => eventType.json());
+    }).then(offer => offer.json());
 
-    setEventType(eventTypeData.data);
+    setOffer(offerData.data);
   }
 
   const AvailableTimesComponent = currentStep === 1 ? (
@@ -242,13 +240,13 @@ export const CalendarPage = () => {
     <div className="container">
       <section className="description-section">
         <hgroup>
-          <h2 id="event">{eventType ? eventType.title : 'loading...'}</h2>
+          <h2 id="offer">{offer ? offer.title : 'loading...'}</h2>
           <div className="icon-text-div">
             <img src={logo} alt="clock-icon" />
-            <h4 id="duration">{eventType ? eventType.duration : 'loading...'} min</h4>
+            <h4 id="duration">{offer ? offer.duration : 'loading...'} min</h4>
           </div>
         </hgroup>
-        <p id="description">{eventType ? eventType.description : 'loading...'}</p>
+        <p id="description">{offer ? offer.description : 'loading...'}</p>
       </section>
       <div className="divider" />
       <section id="calendar-section" className="body-section">
@@ -272,14 +270,14 @@ export const CalendarPage = () => {
       <section className="description-section">
         {/* <button className="back-btn"><img className="arrow-icon" src="icons/arrow (1).svg" alt="back-arrow" /></button> */}
         <hgroup>
-          <h2 id="event">{eventType ? eventType.title : 'loading...'}</h2>
+          <h2 id="offer">{offer ? offer.title : 'loading...'}</h2>
           <div className="icon-text-div">
             <img src={logo} alt="clock-icon" />
-            <h4 id="duration">{eventType ? eventType.duration : 'loading...'} min</h4>
+            <h4 id="duration">{offer ? offer.duration : 'loading...'} min</h4>
           </div><br />
           <div className="icon-text-div">
             {/* <img src="icons/calendar (1).svg" alt="calendar-icon" /> */}
-            <h4 id="event-time-stamp">{moment(buildDate()).format('h:mma')} - {moment(buildDateAddDuration()).format('h:mma')}, {moment(buildDate()).format('MMMM Do YYYY')}</h4>
+            <h4 id="offer-time-stamp">{moment(buildDate()).format('h:mma')} - {moment(buildDateAddDuration()).format('h:mma')}, {moment(buildDate()).format('MMMM Do YYYY')}</h4>
           </div>
         </hgroup>
       </section>
@@ -318,14 +316,14 @@ export const CalendarPage = () => {
         </section>
         <section className="description-section">
           <hgroup>
-            <h2 id="event">{eventType ? eventType.title : 'loading...'}</h2>
+            <h2 id="offer">{offer ? offer.title : 'loading...'}</h2>
             <div className="icon-text-div">
               <img src={logo} alt="clock-icon" />
-              <h4 id="duration">{eventType ? eventType.duration : 'loading...'} min</h4>
+              <h4 id="duration">{offer ? offer.duration : 'loading...'} min</h4>
             </div><br />
             <div className="icon-text-div">
               {/* <img src="icons/calendar (1).svg" alt="calendar-icon" /> */}
-              <h4 id="event-time-stamp">{moment(buildDate()).format('h:mma')} - {moment(buildDateAddDuration()).format('h:mma')}, {moment(buildDate()).format('MMMM Do YYYY')}</h4>
+              <h4 id="offer-time-stamp">{moment(buildDate()).format('h:mma')} - {moment(buildDateAddDuration()).format('h:mma')}, {moment(buildDate()).format('MMMM Do YYYY')}</h4>
             </div>
           </hgroup>
         </section>

@@ -3,11 +3,11 @@ import './App.less';
 import { LoginPage } from './pages/Login/LoginPage';
 import { SignUp } from './pages/Register/RegisterPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import { CalendarPage } from './pages/Booking/CalendarPage';
+import { CalendarPage } from './pages/Calendar/CalendarPage';
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { authContext, AuthProvider } from './contexts/AuthenticationContext';
 import { AvailabilityPage } from './pages/Availability/AvailabilityPage';
-import { BookingOfUserPage } from './pages/BookingsOfUser/BookingsOfUserPage';
+import { BookingOfUserPage } from './pages/Meetings/MeetingsPage';
 import { SettingsPage } from './pages/Settings/SettingsPage'
 
 export const BasePage = () => {
@@ -72,7 +72,7 @@ const App: FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <Switch>
-          <PublicRoute path="/booking/:eventTypeId" component={CalendarPage} />
+          <PublicRoute path="/booking/:offerId" component={CalendarPage} />
           <UnauthenticatedRoute exact path="/login" component={LoginPage} />
           <UnauthenticatedRoute exact path="/register" component={SignUp} />
           <AuthenticatedRoute exact path="/dashboard" component={DashboardPage} />

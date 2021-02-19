@@ -19,10 +19,6 @@ export const BookingOfUserPage = () => {
     const getBookingsGroupedByDate = (arr: Booking[]) => {
         let groupedBookings = new Map();
         arr.forEach((item: Booking) => {
-
-            console.log("item.date: ", item.date);
-            console.log("new date: ", new Date());
-
             if (groupedBookings.has(item.date.toDateString())) {
                 groupedBookings.get(item.date.toDateString()).push(item)
             }
@@ -48,10 +44,8 @@ export const BookingOfUserPage = () => {
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
             let bookings: Booking[] = allBookingRequestJson.data;
-            console.log("bookings from DB: ", bookings);
             for (let booking of bookings) {
                 booking.date = new Date(booking.date);
-                // booking.date.setHours(booking.date.getHours() - 1);
             }
             bookings.sort((booking1: Booking, booking2: Booking) => {
                 if (booking1.date < booking2.date) {
@@ -66,17 +60,13 @@ export const BookingOfUserPage = () => {
         }
     }
 
-    function callback(key: any) {
-        fetchBookings()
-    }
-
     useEffect(() => {
         fetchBookings();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const getBookingRowFormattedJson = (booking: Booking) => {
         let endTime = new Date(booking.date);
-        endTime.setMinutes(endTime.getMinutes() + booking.eventType.duration);
+        endTime.setMinutes(endTime.getMinutes() + booking.offer.duration);
 
         const time = booking.date.toLocaleTimeString("de-DE").substring(0, 5) + " - " + endTime.toLocaleTimeString("de-De").substring(0, 5);
         const invitee = booking.invitee.firstName + " " + booking.invitee.lastName;
@@ -85,8 +75,8 @@ export const BookingOfUserPage = () => {
         {
             "id": booking.id,
             "time": time,
-            "title": booking.eventType.title,
-            "description": booking.eventType.description,
+            "title": booking.offer.title,
+            "description": booking.offer.description,
             "invitee": invitee
         }
 
@@ -109,25 +99,24 @@ export const BookingOfUserPage = () => {
             if (bookings.length !== 0) {
                 for (let booking of bookings) {
                     formattedBookings.push(getBookingRowFormattedJson(booking))
+
                 }
                 jsxElementResultList.push(
                     <List
-                        //  style = {{borderColor: "black", borderInlineColor: "black"}}
                         size="default"
                         header={date}
                         footer={" "}
                         bordered
                         dataSource={formattedBookings}
                         style={{ backgroundColor: "#fff" }}
+                        key={date.toString()}
                         renderItem={item =>
                             <List.Item>
-                                {/* {detailModal && (
-                                <Modal title={item.title} onCancel={() => {setDetailModal(false);}}></Modal>
-                            )} */}
                                 <h4>{item.time}</h4>
                                 <List.Item.Meta title={item.title} style={{ fontWeight: "bold" }} />
                                 <List.Item.Meta description={item.description} />
                                 {item.invitee}
+
                                 <Button
                                     danger
                                     onClick={() => { deleteBooking(item.id) }}
@@ -150,9 +139,7 @@ export const BookingOfUserPage = () => {
         let upcomingBookingsMap = new Map<Date, Booking[]>();
         groupedBookingsMap.forEach((bookings, date) => {
             upcomingBookingsMap.set(date, bookings.filter((bookingItem) => {
-                //    const bookingdate = new Date(bookingItem.date)
                 const bookingDate = moment(bookingItem.date)
-                console.log(bookingDate)
                 return bookingDate.toDate() >= currentDate
             }))
         })
@@ -162,14 +149,11 @@ export const BookingOfUserPage = () => {
 
     const showPast = () => {
         let currentDate = new Date();
-
-        // let bookingRows: any[] = []
         let pastBookingsMap = new Map<Date, Booking[]>();
         groupedBookingsMap.forEach((bookings, date) => {
             pastBookingsMap.set(date, bookings.filter((bookingItem) => {
                 //    const bookingdate = new Date(bookingItem.date)
                 const bookingDate = moment(bookingItem.date)
-                console.log(bookingDate)
                 return bookingDate.toDate() < currentDate
             }))
         })
@@ -180,7 +164,7 @@ export const BookingOfUserPage = () => {
     return (
         <PageLayout index={3}>
             <h3>{moment().format('dddd, D MMMM YYYY')}</h3>
-            <Tabs defaultActiveKey="1" onChange={callback}>
+            <Tabs defaultActiveKey="1" onChange={fetchBookings}>
                 <TabPane tab="Upcoming" key="1">
                     <List>
                         {showUpcoming()}
