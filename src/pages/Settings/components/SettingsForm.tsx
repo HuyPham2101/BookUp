@@ -1,6 +1,7 @@
 import { Button, Form, Input, message, Space } from "antd"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useContext, useState } from "react"
 import { User } from "../../../components/EntityTypes"
+import { authContext } from "../../../contexts/AuthenticationContext";
 
 interface UserData {
     username?: string;
@@ -12,6 +13,7 @@ export const SettingsForm: React.FC<{ fetchUser: () => void, user: User | undefi
     const [changedUserData, setChangedUserData] = useState<UserData>({
         username: user?.userName
     });
+    const {token, actions} = useContext(authContext);
 
     const saveChanges = async () => {
         const userName = (document.getElementById("userNameInput") as HTMLInputElement).value;
@@ -32,7 +34,8 @@ export const SettingsForm: React.FC<{ fetchUser: () => void, user: User | undefi
         }
         await fetch(`/api/user/${user?.id}`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" , Authorization : token!},
+
             body: JSON.stringify(savingUser),
         })
         message.success("Changes saved!")

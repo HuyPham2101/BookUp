@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TimePicker, Checkbox, message } from 'antd';
 import moment from 'moment';
+import { authContext } from '../../../contexts/AuthenticationContext';
 
 const { RangePicker } = TimePicker;
 
@@ -36,7 +37,9 @@ export type DayAvailability = {
 export const DayRow: React.FC<DayItemProps> = ({
     day, fetchDays, userid
 }) => {
+    const {token, actions} = useContext(authContext);
     const timeChanges = async (_: any, timestring: any) => {
+
         let startTimeHour = Number(timestring[0].substring(0, 2))
         let startTimeMinute = Number(timestring[0].substring(3, 5))
 
@@ -44,7 +47,7 @@ export const DayRow: React.FC<DayItemProps> = ({
         let endTimeMinute = Number(timestring[1].substring(3, 5))
 
         await fetch(`/api/availability/update/${userid}`, {
-            headers: { 'content-type': 'application/json' },
+            headers: { "Content-Type": "application/json" , Authorization : token!},
             method: "PATCH",
             body: JSON.stringify({
                 fromTimeHour: startTimeHour,
@@ -59,7 +62,7 @@ export const DayRow: React.FC<DayItemProps> = ({
     const checkBoxChanges = async (checked: boolean) => {
         console.log(checked);
         await fetch(`/api/availability/update/${userid}`, {
-            headers: { 'content-type': 'application/json' },
+            headers: { "Content-Type": "application/json" , Authorization : token!},
             method: "PATCH",
             body: JSON.stringify({
                 day: day.day,

@@ -13,7 +13,7 @@ export type BookingDateFiltered = {
 }
 
 export const BookingOfUserPage = () => {
-    const token = useContext(authContext);
+    const {token, actions} = useContext(authContext);
     const [groupedBookingsMap, setGroupedBookingsMap] = useState<Map<Date, Booking[]>>(new Map())
 
     const getBookingsGroupedByDate = (arr: Booking[]) => {
@@ -37,18 +37,17 @@ export const BookingOfUserPage = () => {
 
     const fetchBookings = async function () {
         let tempUserId = 0;
-        const decode = token.actions.getTokenData();
+        const decode = actions.getTokenData();
         if (decode != null) {
             tempUserId = decode.id;
         }
         const allBookingRequest = await fetch("/api/booking/all/" + tempUserId, {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", Authorization : token! },
         });
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
             let bookings: Booking[] = allBookingRequestJson.data;
-            console.log("bookings from DB: ", bookings);
             for (let booking of bookings) {
                 booking.date = new Date(booking.date);
                 // booking.date.setHours(booking.date.getHours() - 1);
@@ -96,7 +95,7 @@ export const BookingOfUserPage = () => {
     const deleteBooking = async (bookingId: number) => {
         await fetch(`/api/booking/${bookingId}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" , Authorization : token!},
         });
         fetchBookings();
     }
