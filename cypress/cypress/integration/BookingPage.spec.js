@@ -1,6 +1,5 @@
 describe("BookingsOfUser" , () => {
 
-    
     it("can add Bookings", ()=> {
         cy.loginNewUser({}).then((user) => {
         //first add an EventType
@@ -29,26 +28,6 @@ describe("BookingsOfUser" , () => {
             cy.findByLabelText(/Email/i).type("Test@gmail.com")
             cy.findByText(/Schedule Event/i).click();
             cy.findByText(/Confirmed/i).should('exist')
-            cy.screenshot();
-        })
-    })
-
-    it("can redirect to Availability Page", ()=> {
-        cy.loginNewUser({}).then((user) => {
-            cy.visit("/dashboard");
-            cy.screenshot();
-            cy.findByText(/Availability/i).click();
-            cy.url().should("contain", "/Availability");
-            cy.screenshot();
-        })
-    })
-
-    it("can redirect to DashBoard", ()=> {
-        cy.loginNewUser({}).then((user) => {
-            cy.visit("/Availability");
-            cy.screenshot();
-            cy.findByText(/Dashboard/i).click();
-            cy.url().should("contain", "/dashboard");
             cy.screenshot();
         })
     })
