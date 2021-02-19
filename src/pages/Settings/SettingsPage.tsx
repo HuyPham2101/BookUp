@@ -12,12 +12,12 @@ export const SettingsPage = () => {
     const { actions: { getTokenData } } = useContext(authContext);
     const [user, setUser] = useState<User>();
     const [imgUrl, setImgUrl] = useState("");
-    const {token, actions} = useContext(authContext);
+    const { token } = useContext(authContext);
 
     const fetchUser = async () => {
         const userId = getTokenData()?.id;
         const userRequest = await fetch(`/api/user/${userId}`, {
-            headers: { "Content-Type": "application/json" , Authorization : token!},
+            headers: { "Content-Type": "application/json", Authorization: token! },
         });
         if (userRequest.status === 200) {
             const userJSON = await userRequest.json();

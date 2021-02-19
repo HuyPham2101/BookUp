@@ -21,7 +21,7 @@ export const PageLayout = (props: any) => {
           <Menu.Item key="1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
           <Menu.Item key="2"><Link to="/Availability">Availability</Link></Menu.Item>
           <Menu.Item key="3"><Link to="/meetings">Meetings</Link></Menu.Item>
-          <div key="3" style={{ float: "right", cursor: "pointer" }}>
+          <div style={{ float: "right", cursor: "pointer" }}>
             <Dropdown trigger={['click']} overlay={() => ProfileMenu(logout)}><span><ProfileOutlined style={{ fontSize: 30 }} /></span></Dropdown>
           </div>
         </Menu>

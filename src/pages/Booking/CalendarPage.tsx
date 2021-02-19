@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { DayMonthHeading } from '../../components/DayMonthHeadingComponent';
 import { TimeButton } from '../../components/TimeButtonComponent';
 import Lottie from 'react-lottie';
@@ -14,7 +14,6 @@ import {
 } from "react-router-dom";
 
 import logo from '../../logo.svg';
-import { authContext } from '../../contexts/AuthenticationContext';
 import './style.css';
 
 export interface TimeAvailable {
@@ -83,7 +82,7 @@ export const CalendarPage = () => {
 
     setTimesAvailable(transformAvailableTime(timeResponse));
 
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchTimeForDate = async (date: Date) => {
     const fetchTimeData = await fetch(`/api/booking/${eventTypeId}?date=${date.toUTCString()}`, {

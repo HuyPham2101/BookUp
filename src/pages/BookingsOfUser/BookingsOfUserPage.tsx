@@ -13,7 +13,7 @@ export type BookingDateFiltered = {
 }
 
 export const BookingOfUserPage = () => {
-    const {token, actions} = useContext(authContext);
+    const { token, actions } = useContext(authContext);
     const [groupedBookingsMap, setGroupedBookingsMap] = useState<Map<Date, Booking[]>>(new Map())
 
     const getBookingsGroupedByDate = (arr: Booking[]) => {
@@ -43,7 +43,7 @@ export const BookingOfUserPage = () => {
         }
         const allBookingRequest = await fetch("/api/booking/all/" + tempUserId, {
             method: "GET",
-            headers: { "Content-Type": "application/json", Authorization : token! },
+            headers: { "Content-Type": "application/json", Authorization: token! },
         });
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
@@ -95,7 +95,7 @@ export const BookingOfUserPage = () => {
     const deleteBooking = async (bookingId: number) => {
         await fetch(`/api/booking/${bookingId}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" , Authorization : token!},
+            headers: { "Content-Type": "application/json", Authorization: token! },
         });
         fetchBookings();
     }
@@ -118,6 +118,7 @@ export const BookingOfUserPage = () => {
                         bordered
                         dataSource={formattedBookings}
                         style={{ backgroundColor: "#fff" }}
+                        key={date.toString()}
                         renderItem={item =>
                             <List.Item>
                                 {/* {detailModal && (

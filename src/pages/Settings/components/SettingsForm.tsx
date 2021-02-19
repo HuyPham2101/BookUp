@@ -13,7 +13,7 @@ export const SettingsForm: React.FC<{ fetchUser: () => void, user: User | undefi
     const [changedUserData, setChangedUserData] = useState<UserData>({
         username: user?.userName
     });
-    const {token, actions} = useContext(authContext);
+    const { token } = useContext(authContext);
 
     const saveChanges = async () => {
         const userName = (document.getElementById("userNameInput") as HTMLInputElement).value;
@@ -34,7 +34,7 @@ export const SettingsForm: React.FC<{ fetchUser: () => void, user: User | undefi
         }
         await fetch(`/api/user/${user?.id}`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" , Authorization : token!},
+            headers: { "Content-Type": "application/json", Authorization: token! },
 
             body: JSON.stringify(savingUser),
         })
