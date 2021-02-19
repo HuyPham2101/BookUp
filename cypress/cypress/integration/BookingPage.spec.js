@@ -11,6 +11,7 @@ describe("BookingsOfUser" , () => {
             cy.findByText("Submit").click();
 
             cy.findByText("Copy Link").click();
+            alert("Copied");
             // get link from CLipboard then isolate the id then fetch to the visit test
             cy.task('getClipboard').then(($clip) => {
                 const url = $clip;
@@ -20,8 +21,8 @@ describe("BookingsOfUser" , () => {
             });
 
             cy.findByText(/28/i).click();
-            cy.contains('10:00am').click();
-            cy.findByText(/Confirm/i).click();
+            cy.get('.time-btn').findByText('10:00am').click();
+            cy.get('.confirm-btn').first().click();
         //Create a booking then redirect to our bookingofUserPage
             cy.findByLabelText(/Firstname/i).type("testInvitee")
             cy.findByLabelText(/Lastname/i).type("testInviteeLastname")

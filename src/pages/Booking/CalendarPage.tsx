@@ -85,7 +85,7 @@ export const CalendarPage = () => {
     }, []);
 
     const fetchTimeForDate = async (date : Date) => {
-      const fetchTimeData = await fetch(`/api/booking/${eventTypeId}?date=${date.toISOString()}`, {
+      const fetchTimeData = await fetch(`/api/booking/${eventTypeId}?date=${date.toUTCString()}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -165,8 +165,9 @@ export const CalendarPage = () => {
       {
         const date = new Date(selectedDate);
 
-        date.setHours(selectedTime.hours);
-        date.setMinutes(selectedTime.minutes);
+        date.setUTCHours(selectedTime.hours);   
+        // date.setHours(date.getHours() + 1);
+        date.setUTCMinutes(selectedTime.minutes);
         console.log(date)
         return date;
       }
@@ -259,6 +260,7 @@ export const CalendarPage = () => {
               initialView="dayGridMonth"
               height='auto'
               dateClick={ handleDateClick }
+              timeZone="UTC"
             />
           </div>
         </section>

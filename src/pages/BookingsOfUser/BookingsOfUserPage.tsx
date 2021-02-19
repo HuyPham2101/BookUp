@@ -50,7 +50,7 @@ export const BookingOfUserPage = () => {
             let bookings: Booking[] = allBookingRequestJson.data;
             for (let booking of bookings) {
                 booking.date = new Date(booking.date);
-                booking.date.setHours(booking.date.getHours() - 1);
+                // booking.date.setHours(booking.date.getHours() - 1);
             }
             bookings.sort((booking1: Booking, booking2: Booking) => {
                 if (booking1.date < booking2.date) {
@@ -149,7 +149,7 @@ export const BookingOfUserPage = () => {
         groupedBookingsMap.forEach((bookings, date) => {
             upcomingBookingsMap.set(date, bookings.filter((bookingItem) => {
                 //    const bookingdate = new Date(bookingItem.date)
-                const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                const bookingDate = moment(bookingItem.date)
                 console.log(bookingDate)
                 return bookingDate.toDate() >= currentDate
             }))
@@ -166,7 +166,7 @@ export const BookingOfUserPage = () => {
         groupedBookingsMap.forEach((bookings, date) => {
             pastBookingsMap.set(date, bookings.filter((bookingItem) => {
                 //    const bookingdate = new Date(bookingItem.date)
-                const bookingDate = moment(bookingItem.date).subtract(1, "hours")
+                const bookingDate = moment(bookingItem.date)
                 console.log(bookingDate)
                 return bookingDate.toDate() < currentDate
             }))

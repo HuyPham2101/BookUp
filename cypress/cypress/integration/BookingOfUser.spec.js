@@ -30,7 +30,7 @@ describe("BookingsOfUser" , () => {
             });
 
             cy.findByText(/28/i).click();
-            cy.contains('10:30am').click();
+            cy.findByText(/10:30am/i).click();
             cy.findByText(/Confirm/i).click();
             //Create a booking then redirect to our bookingofUserPage
             cy.findByLabelText(/Firstname/i).type("testInvitee33")
