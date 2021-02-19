@@ -24,7 +24,7 @@ In order to make the whole application work you have to clone [the backend](http
 Then, you have to install the `node_modules` by executing `npm i` in the `bookup-backend` directory.
 Do the same for the `bookup-frontend` directory.
 
-Finally, open a terminal for `ExampleDirectory` and execute 
+Finally, open a terminal in `bookup-frontend` and execute 
 ```bash 
 docker-compose up
 ```
