@@ -165,9 +165,9 @@ export const CalendarPage = () => {
       {
         const date = new Date(selectedDate);
 
-        date.setUTCHours(selectedTime.hours);   
+        date.setHours(selectedTime.hours);   
         // date.setHours(date.getHours() + 1);
-        date.setUTCMinutes(selectedTime.minutes);
+        date.setMinutes(selectedTime.minutes);
         console.log(date)
         return date;
       }

@@ -48,6 +48,7 @@ export const BookingOfUserPage = () => {
         if (allBookingRequest.status === 200) {
             const allBookingRequestJson = await allBookingRequest.json();
             let bookings: Booking[] = allBookingRequestJson.data;
+            console.log("bookings from DB: ",bookings);
             for (let booking of bookings) {
                 booking.date = new Date(booking.date);
                 // booking.date.setHours(booking.date.getHours() - 1);
