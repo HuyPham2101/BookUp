@@ -4,7 +4,7 @@ import { Form, Button, Slider, InputNumber, Row, Col } from "antd"
 import { authContext } from "../../../contexts/AuthenticationContext";
 
 export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit }) => {
-    const token = useContext(authContext);
+    const {token, actions} = useContext(authContext);
     const [offer, setOffer] = useState({
         title: "",
         description: "",
@@ -21,7 +21,7 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
     }
 
     const onFinish = async (e: React.FormEvent<HTMLFormElement>) => {
-        const userId = token.actions.getTokenData()?.id
+        const userId = actions.getTokenData()?.id
 
         const tempOffer = {
             title: offer.title,
@@ -32,7 +32,7 @@ export const AddOfferForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmi
         console.log(tempOffer);
         await fetch(`/api/user/${userId}/eventType`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" , Authorization : token!},
             body: JSON.stringify(tempOffer),
         })
 

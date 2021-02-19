@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { DayMonthHeading } from '../../components/DayMonthHeadingComponent';
 import { TimeButton } from '../../components/TimeButtonComponent';
 import Lottie from 'react-lottie';
@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 
 import logo from '../../logo.svg';
+import { authContext } from '../../contexts/AuthenticationContext';
 
 export interface TimeAvailable {
   time: string;
@@ -44,6 +45,7 @@ interface SelectedTime {
 }
 
 export const CalendarPage = () => {
+    const {token, actions} = useContext(authContext);
     const [ timesAvailable, setTimesAvailable ] = useState<TimeAvailable[]>([]);
     const [ selectedDate, setSelectedDate ] = useState<Date>(new Date());
     const [ selectedTime, setSelectedTime ] = useState<SelectedTime>();
@@ -89,6 +91,7 @@ export const CalendarPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization : token!
         },
       }).then(eventType => eventType.json());
 
@@ -220,6 +223,7 @@ export const CalendarPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization : token!
         },
       }).then(eventType => eventType.json());
 

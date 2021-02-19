@@ -11,15 +11,16 @@ import { PageLayout } from '../../components/PageLayout';
 
 export const DashboardPage = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
-  const token = useContext(authContext);
+  const {token, actions} = useContext(authContext);
   const [addOfferVisible, setAddOfferVisible] = useState(false);
   const [filteredOffers, setFilteredOffer] = useState<Offer[]>();
   const [filtering, setFiltering] = useState<boolean>(false);
 
   const fetchOffers = async function () {
-    const userId = token.actions.getTokenData()?.id;
+    const userId = actions.getTokenData()?.id
+
     const offerRequest = await fetch(`/api/user/${userId}/eventTypes`, {
-      headers: { 'content-type': "application/json" },
+      headers: { "Content-Type": "application/json" , Authorization : token!},
     });
     if (offerRequest.status === 200) {
       const offerJSON = await offerRequest.json();
