@@ -1,0 +1,17 @@
+{
+  "name": "@calendly/cypress",
+  "version": "1.0.0",
+  "scripts": {
+    "cypress": "npx cypress open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@testing-library/cypress": "^6.0.1",
+    "test-data-bot": "^0.8.0"
+  },
+  "devDependencies": {
+    "cypress": "^4.12.1"
+  }
+}
