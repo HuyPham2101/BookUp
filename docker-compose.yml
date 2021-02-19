@@ -23,6 +23,7 @@ services:
     command: >
       sh -c "npm i bcrypt &&
              npm i @types/bcrypt &&
+             npm run typeorm schema:sync &&
              npm run dev"
     volumes:
       - ../bookup-backend:/var/app/backend
