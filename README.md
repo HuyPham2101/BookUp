@@ -69,7 +69,13 @@ As an **Invitee**, after you opened the Link, you can:
 
 * submit & schedule the appointment for the provider 
 
+## Stage
 
+The stageing environment of this project can be found [here](http://bookup.bando.dev/).
+
+Test User:
+email: test@gmail.com
+password: test
 
 ## Screenshots
 
