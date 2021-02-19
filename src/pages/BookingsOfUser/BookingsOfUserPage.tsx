@@ -92,7 +92,7 @@ export const BookingOfUserPage = () => {
         return bookingRowJson;
     }
 
-    const deleteBooking = async (bookingId : number) => {
+    const deleteBooking = async (bookingId: number) => {
         await fetch(`/api/booking/${bookingId}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" , Authorization : token!},
@@ -103,37 +103,38 @@ export const BookingOfUserPage = () => {
     const generateBookingList = (bookingMap: Map<Date, Booking[]>) => {
         // const [detailModal, setDetailModal] = useState<boolean>(false);
         let formattedBookings: any[] = [];
-        let jsxElementResultList : JSX.Element[] = [];
+        let jsxElementResultList: JSX.Element[] = [];
         bookingMap.forEach((bookings, date) => {
-            if(bookings.length !== 0){
+            if (bookings.length !== 0) {
                 for (let booking of bookings) {
                     formattedBookings.push(getBookingRowFormattedJson(booking))
                 }
                 jsxElementResultList.push(
                     <List
-                    //  style = {{borderColor: "black", borderInlineColor: "black"}}
-                    size="default"
-                    header={date}
-                    footer={" "}
-                    bordered
-                    dataSource={formattedBookings}
-                    renderItem={item =>
-                        <List.Item>
-                            {/* {detailModal && (
+                        //  style = {{borderColor: "black", borderInlineColor: "black"}}
+                        size="default"
+                        header={date}
+                        footer={" "}
+                        bordered
+                        dataSource={formattedBookings}
+                        style={{ backgroundColor: "#fff" }}
+                        renderItem={item =>
+                            <List.Item>
+                                {/* {detailModal && (
                                 <Modal title={item.title} onCancel={() => {setDetailModal(false);}}></Modal>
                             )} */}
-                            <h4>{item.time}</h4>
-                            <List.Item.Meta title={item.title} style={{ fontWeight: "bold" }} />
-                            <List.Item.Meta description={item.description} />
-                            {item.invitee}
-                            <Button
-                             danger
-                             onClick={() => {deleteBooking(item.id)}}
-                             style={{float: "right"}}
-                            >
-                                Delete
+                                <h4>{item.time}</h4>
+                                <List.Item.Meta title={item.title} style={{ fontWeight: "bold" }} />
+                                <List.Item.Meta description={item.description} />
+                                {item.invitee}
+                                <Button
+                                    danger
+                                    onClick={() => { deleteBooking(item.id) }}
+                                    style={{ float: "right" }}
+                                >
+                                    Delete
                             </Button>
-                        </List.Item>} />
+                            </List.Item>} />
                 );
                 formattedBookings = [];
             }
@@ -154,8 +155,8 @@ export const BookingOfUserPage = () => {
                 return bookingDate.toDate() >= currentDate
             }))
         })
-  
-        return  generateBookingList(upcomingBookingsMap);
+
+        return generateBookingList(upcomingBookingsMap);
     }
 
     const showPast = () => {
@@ -171,9 +172,9 @@ export const BookingOfUserPage = () => {
                 return bookingDate.toDate() < currentDate
             }))
         })
-    
+
         return generateBookingList(pastBookingsMap);
-    } 
+    }
 
     return (
         <PageLayout index={3}>
